@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Stocktaking.View.RaportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="441" d:DesignWidth="686" IsVisibleChanged="UserControl_IsVisibleChanged">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="69*"/>
+            <RowDefinition Height="31*"/>
+            <RowDefinition x:Name="DataRow" Height="auto"/>
+            <RowDefinition Height="250*"/>
+
+            <RowDefinition Height="78*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="5,0,0,33">
+            <TextBlock Margin="0,10,0,3">Wygeneruj raport z konta:</TextBlock>
+            <TextBlock x:Name="TypeTextBlock" Margin="10,10,0,3" Width="155" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5,36,0,5">
+            <TextBlock Margin="3,3,3,0">Pracownika:</TextBlock>
+            <TextBlock x:Name="NameTextBlock" Margin="75,3,0,0" Width="208"/>
+        </StackPanel>
+        <Label Grid.Row="1" HorizontalAlignment="Left" Width="376" Grid.RowSpan="2">Wybierz kryterium dla danych w siatce.</Label>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="390,0,0,0" x:Name="RadioButtonChief" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="221">
+            <RadioButton x:Name="Worker" Content="Zakład" GroupName="Criterion" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Checked="Worker_Checked"/>
+            <RadioButton x:Name="Room" Content="Sala" GroupName="Criterion" HorizontalAlignment="Left" Margin="5" Grid.Row="1" VerticalAlignment="Top" Checked="Room_Checked"/>
+            <RadioButton x:Name="Device" Content="Sprzęt" GroupName="Criterion" HorizontalAlignment="Left" Margin="5" Grid.Row="1" VerticalAlignment="Top" Checked="Device_Checked"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" x:Name="RadioButtonManager" Margin="390,0,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="221">
+            <RadioButton x:Name="RoomMan" Content="Sala" GroupName="Criterion" HorizontalAlignment="Left" Margin="5" Grid.Row="1" VerticalAlignment="Top" Checked="RoomMan_Checked" />
+            <RadioButton x:Name="DeviceMan" Content="Sprzęt" GroupName="Criterion" HorizontalAlignment="Left" Margin="5" Grid.Row="1" VerticalAlignment="Top" Checked="DeviceMan_Checked" />
+        </StackPanel>
+        <DataGrid ColumnWidth="auto" Width="auto" SelectionMode="Single" Margin="2,2,0,1" IsReadOnly="True"
+                  Grid.Row="2" x:Name="InstituteDatagrid" ItemsSource="{Binding}" />
+        <DataGrid ColumnWidth="auto" SelectionMode="Single" Margin="2,2,0,2" IsReadOnly="True"
+                  Grid.Row="3" x:Name="RaportDatagrid" ItemsSource="{Binding}" />
+
+        <Button x:Name="GenerateOldRaportButton" Grid.Row="4" IsEnabled="True" Content="Wybierz starszy raport" 
+                Margin="0,4,10,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Right" Width="160" Click="GenerateOldRaportButton_Click" />
+        <Label Grid.Row="4" Margin="5,23,0,0" HorizontalAlignment="Left" Width="326" Height="30" VerticalAlignment="Top">Wybierz ścieżkę do zapisu pliku.</Label>
+        <TextBox Grid.Row="4" x:Name="PathTextBox" Width="317" IsReadOnly="True" VerticalAlignment="Top" Margin="10,53,359,0"/>
+        <Button Grid.Row="4" x:Name="GetPathButton" Margin="336,41,289,0" Content="Wybierz" Width="61" Click="GetPathButton_Click" Height="30" VerticalAlignment="Top"/>
+        <Button Grid.Row="4" x:Name="GenerateRaportButton" IsEnabled="False" Content="Generuj raport" Margin="0,41,10,0" Height="27" 
+            	HorizontalAlignment="Right" VerticalAlignment="Top" Click="GenerateRaportButton_Click" Width="135" />
+    </Grid>
+</UserControl>

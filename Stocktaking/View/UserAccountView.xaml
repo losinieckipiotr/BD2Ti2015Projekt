@@ -1,0 +1,98 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Stocktaking="clr-namespace:Stocktaking" xmlns:local="clr-namespace:Stocktaking.View" x:Class="Stocktaking.View.UserAccountView" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800" IsVisibleChanged="UserControl_IsVisibleChanged">
+    <UserControl.Resources>
+        
+        <!--
+        <CollectionViewSource x:Key="kontoViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:konto}, CreateList=True}"/>
+        -->
+        
+        <CollectionViewSource x:Key="konto_typViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:konto_typ}, CreateList=True}"/>
+        <CollectionViewSource x:Key="pracownikViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:pracownik}, CreateList=True}"/>
+        <CollectionViewSource x:Key="userRecordViewSource" d:DesignSource="{d:DesignInstance {x:Type local:UserRecord}, CreateList=True}"/>
+        
+    </UserControl.Resources>
+    <Grid Background="White" DataContext="{StaticResource userRecordViewSource}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" MinWidth="200"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <Label Content="Konta użytkowników:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
+            <DataGrid x:Name="userRecordDataGrid" Margin="5" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True" SelectionChanged="userRecordDataGrid_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="idColumn1" Binding="{Binding id}" Header="Id" Width="25"/>
+                    <DataGridTextColumn x:Name="loginColumn1" Binding="{Binding login}" Header="Login" Width="80"/>
+                    <DataGridTextColumn x:Name="typ_kontaColumn" Binding="{Binding typ_konta}" Header="Typ konta" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+
+        <StackPanel Grid.Column="2">
+            <Label Content="Login:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Imię:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Nazwisko:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Typ konta:" HorizontalAlignment="Left" Margin="5,5,0,0"  VerticalAlignment="Top"/>
+            <Label Content="Numer sali:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Zakład:" HorizontalAlignment="Left" Margin="5,5,0,0"  VerticalAlignment="Top"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="3" DataContext="{StaticResource userRecordViewSource}">
+            <TextBox x:Name="zaznaczonyLoginTextBox" Text="{Binding login, Mode=OneWay, NotifyOnTargetUpdated=False, NotifyOnSourceUpdated=False, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" Height="26" Margin="5,5,5,0"/>
+            <TextBox x:Name="imieTextBox" Text="{Binding konto.pracownik.imie, Mode=OneWay, NotifyOnSourceUpdated=True, ValidatesOnDataErrors=True}" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" IsReadOnly="True" Height="26" Margin="5,5,5,0"/>
+            <TextBox x:Name="nazwiskoTextBox" Height="26" Text="{Binding konto.pracownik.nazwisko, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" IsReadOnly="True" Margin="5,5,5,0"/>
+            <ComboBox x:Name="typKontaComboBox" HorizontalAlignment="Stretch" Height="26" Margin="5,5,5,0" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource konto_typViewSource}}" DisplayMemberPath="nazwa" />
+            <TextBox x:Name="salaNumerTextBox" HorizontalAlignment="Stretch" Height="26" Margin="5,5,5,0" Text="{Binding konto.pracownik.sala.numer, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" IsReadOnly="True"/>
+            <TextBox x:Name="zakladTextBox" HorizontalAlignment="Stretch" Height="26" Margin="5,5,5,0" Text="{Binding konto.pracownik.sala.zaklad.nazwa, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" IsReadOnly="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="4">
+            <Button x:Name="loginButton" Width="120" Height="26" Margin="5,5,5,0" Click="loginButton_Click" HorizontalAlignment="Center" Content="Zmień login"/>
+            <Button x:Name="usunButton" Width="120" Height="26" Margin="5,5,5,0" Click="usunButton_Click" HorizontalAlignment="Center" Content="Usuń konto"/>
+            <Button x:Name="typButton" Width="120" Height="26" Margin="5,5,5,0" Click="typButton_Click" HorizontalAlignment="Center" Content="Zmien typ konta"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Grid.Row="1">
+            <Label Content="Login:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Hasło:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Powtórz hasło:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Typ konta:" HorizontalAlignment="Left" Margin="5,5,0,0"  VerticalAlignment="Top"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="3" Grid.Row="1">
+            <TextBox x:Name="nowyLoginTextBox" Margin="5,5,5,0" Grid.Row="0" VerticalAlignment="Center" Height="26"/>
+            <PasswordBox x:Name="hasloPassBox" Margin="5,5,5,0" VerticalAlignment="Center" Height="26"/>
+            <PasswordBox x:Name="powtorzPassBox" Margin="5,5,5,0" VerticalAlignment="Center" Height="26"/>
+            <ComboBox x:Name="typComboBox" Margin="5,5,5,0" DisplayMemberPath="nazwa" VerticalAlignment="Center" Height="26"/>
+        </StackPanel>
+
+        <Button x:Name="dodajButton2" Grid.Column="4" Grid.Row="1"  Width="120" Margin="5,5,5,0" Click="dodajButton_Click" Height="26" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Dodaj konto"/>
+
+        <StackPanel Grid.Row="1">
+            <Label Content="Wybierz pracownika bay dodać konto:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
+            <DataGrid x:Name="pracownikDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource pracownikViewSource}}" Margin="5" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="pracIdColum" Binding="{Binding id}" Header="Id" Width="40"/>
+                    <DataGridTextColumn x:Name="pracImieColumn" Binding="{Binding imie}" Header="Imię" Width="65"/>
+                    <DataGridTextColumn x:Name="pracNazwiskoColumn" Binding="{Binding nazwisko}" Header="Nazwisko" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

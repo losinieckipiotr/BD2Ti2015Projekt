@@ -1,0 +1,614 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StocktakingDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="konto">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="haslo" Type="binary" MaxLength="64" Nullable="false" />
+          <Property Name="konto_typ_id" Type="int" Nullable="false" />
+          <Property Name="pracownik_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="konto_typ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pracownik">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="imie" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="nazwisko" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="sala_id" Type="int" />
+        </EntityType>
+        <EntityType Name="raport">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="data" Type="datetime" Nullable="false" />
+          <Property Name="raport" Type="text" Nullable="false" />
+          <Property Name="konto_id" Type="int" />
+          <Property Name="imie_nazwisko" Type="varchar" MaxLength="80" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sala">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="numer" Type="int" Nullable="false" />
+          <Property Name="pojemnosc" Type="int" Nullable="false" />
+          <Property Name="sala_typ_id" Type="int" Nullable="false" />
+          <Property Name="zaklad_id" Type="int" />
+        </EntityType>
+        <EntityType Name="sala_typ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="typ_sali" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sprzet">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="sprzet_typ_id" Type="int" Nullable="false" />
+          <Property Name="sala_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sprzet_typ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="typ_sprzetu" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="zaklad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="kierownik" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="konto_konto_typ">
+          <End Role="konto_typ" Type="Self.konto_typ" Multiplicity="1" />
+          <End Role="konto" Type="Self.konto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="konto_typ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="konto">
+              <PropertyRef Name="konto_typ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="konto_pracownik">
+          <End Role="pracownik" Type="Self.pracownik" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="konto" Type="Self.konto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pracownik">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="konto">
+              <PropertyRef Name="pracownik_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="pracownik_sala">
+          <End Role="sala" Type="Self.sala" Multiplicity="0..1" />
+          <End Role="pracownik" Type="Self.pracownik" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sala">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pracownik">
+              <PropertyRef Name="sala_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="pracownik_zaklad_kierow">
+          <End Role="pracownik" Type="Self.pracownik" Multiplicity="1" />
+          <End Role="zaklad" Type="Self.zaklad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pracownik">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zaklad">
+              <PropertyRef Name="kierownik" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="raport_konto">
+          <End Role="konto" Type="Self.konto" Multiplicity="0..1" />
+          <End Role="raport" Type="Self.raport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="konto">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="raport">
+              <PropertyRef Name="konto_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sala_typ_sala">
+          <End Role="sala_typ" Type="Self.sala_typ" Multiplicity="1" />
+          <End Role="sala" Type="Self.sala" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sala_typ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sala">
+              <PropertyRef Name="sala_typ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sala_zaklad">
+          <End Role="zaklad" Type="Self.zaklad" Multiplicity="0..1" />
+          <End Role="sala" Type="Self.sala" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="zaklad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sala">
+              <PropertyRef Name="zaklad_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sprzet_sala">
+          <End Role="sala" Type="Self.sala" Multiplicity="1" />
+          <End Role="sprzet" Type="Self.sprzet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sala">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sprzet">
+              <PropertyRef Name="sala_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sprzet_sprzet_typ">
+          <End Role="sprzet_typ" Type="Self.sprzet_typ" Multiplicity="1" />
+          <End Role="sprzet" Type="Self.sprzet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sprzet_typ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sprzet">
+              <PropertyRef Name="sprzet_typ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StocktakingDatabaseModelStoreContainer">
+          <EntitySet Name="konto" EntityType="Self.konto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="konto_typ" EntityType="Self.konto_typ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pracownik" EntityType="Self.pracownik" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="raport" EntityType="Self.raport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sala" EntityType="Self.sala" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sala_typ" EntityType="Self.sala_typ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sprzet" EntityType="Self.sprzet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sprzet_typ" EntityType="Self.sprzet_typ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="zaklad" EntityType="Self.zaklad" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="konto_konto_typ" Association="Self.konto_konto_typ">
+            <End Role="konto_typ" EntitySet="konto_typ" />
+            <End Role="konto" EntitySet="konto" />
+          </AssociationSet>
+          <AssociationSet Name="konto_pracownik" Association="Self.konto_pracownik">
+            <End Role="pracownik" EntitySet="pracownik" />
+            <End Role="konto" EntitySet="konto" />
+          </AssociationSet>
+          <AssociationSet Name="pracownik_sala" Association="Self.pracownik_sala">
+            <End Role="sala" EntitySet="sala" />
+            <End Role="pracownik" EntitySet="pracownik" />
+          </AssociationSet>
+          <AssociationSet Name="pracownik_zaklad_kierow" Association="Self.pracownik_zaklad_kierow">
+            <End Role="pracownik" EntitySet="pracownik" />
+            <End Role="zaklad" EntitySet="zaklad" />
+          </AssociationSet>
+          <AssociationSet Name="raport_konto" Association="Self.raport_konto">
+            <End Role="konto" EntitySet="konto" />
+            <End Role="raport" EntitySet="raport" />
+          </AssociationSet>
+          <AssociationSet Name="sala_typ_sala" Association="Self.sala_typ_sala">
+            <End Role="sala_typ" EntitySet="sala_typ" />
+            <End Role="sala" EntitySet="sala" />
+          </AssociationSet>
+          <AssociationSet Name="sala_zaklad" Association="Self.sala_zaklad">
+            <End Role="zaklad" EntitySet="zaklad" />
+            <End Role="sala" EntitySet="sala" />
+          </AssociationSet>
+          <AssociationSet Name="sprzet_sala" Association="Self.sprzet_sala">
+            <End Role="sala" EntitySet="sala" />
+            <End Role="sprzet" EntitySet="sprzet" />
+          </AssociationSet>
+          <AssociationSet Name="sprzet_sprzet_typ" Association="Self.sprzet_sprzet_typ">
+            <End Role="sprzet_typ" EntitySet="sprzet_typ" />
+            <End Role="sprzet" EntitySet="sprzet" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StocktakingDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="konto">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="haslo" Type="Binary" MaxLength="64" FixedLength="true" Nullable="false" />
+          <Property Name="konto_typ_id" Type="Int32" Nullable="false" />
+          <Property Name="pracownik_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="konto_typ" Relationship="Self.konto_konto_typ" FromRole="konto" ToRole="konto_typ" />
+          <NavigationProperty Name="pracownik" Relationship="Self.konto_pracownik" FromRole="konto" ToRole="pracownik" />
+          <NavigationProperty Name="raport" Relationship="Self.raport_konto" FromRole="konto" ToRole="raport" />
+        </EntityType>
+        <EntityType Name="konto_typ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="nazwa" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="konto" Relationship="Self.konto_konto_typ" FromRole="konto_typ" ToRole="konto" />
+        </EntityType>
+        <EntityType Name="pracownik">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="imie" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nazwisko" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sala_id" Type="Int32" />
+          <NavigationProperty Name="konto" Relationship="Self.konto_pracownik" FromRole="pracownik" ToRole="konto" />
+          <NavigationProperty Name="sala" Relationship="Self.pracownik_sala" FromRole="pracownik" ToRole="sala" />
+          <NavigationProperty Name="zaklad" Relationship="Self.pracownik_zaklad_kierow" FromRole="pracownik" ToRole="zaklad" />
+        </EntityType>
+        <EntityType Name="raport">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="data" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="raport1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="konto_id" Type="Int32" />
+          <Property Name="imie_nazwisko" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="konto" Relationship="Self.raport_konto" FromRole="raport" ToRole="konto" />
+        </EntityType>
+        <EntityType Name="sala">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="numer" Type="Int32" Nullable="false" />
+          <Property Name="pojemnosc" Type="Int32" Nullable="false" />
+          <Property Name="sala_typ_id" Type="Int32" Nullable="false" />
+          <Property Name="zaklad_id" Type="Int32" />
+          <NavigationProperty Name="pracownik" Relationship="Self.pracownik_sala" FromRole="sala" ToRole="pracownik" />
+          <NavigationProperty Name="sala_typ" Relationship="Self.sala_typ_sala" FromRole="sala" ToRole="sala_typ" />
+          <NavigationProperty Name="zaklad" Relationship="Self.sala_zaklad" FromRole="sala" ToRole="zaklad" />
+          <NavigationProperty Name="sprzet" Relationship="Self.sprzet_sala" FromRole="sala" ToRole="sprzet" />
+        </EntityType>
+        <EntityType Name="sala_typ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="typ_sali" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="sala" Relationship="Self.sala_typ_sala" FromRole="sala_typ" ToRole="sala" />
+        </EntityType>
+        <EntityType Name="sprzet">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="opis" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sprzet_typ_id" Type="Int32" Nullable="false" />
+          <Property Name="sala_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="sala" Relationship="Self.sprzet_sala" FromRole="sprzet" ToRole="sala" />
+          <NavigationProperty Name="sprzet_typ" Relationship="Self.sprzet_sprzet_typ" FromRole="sprzet" ToRole="sprzet_typ" />
+        </EntityType>
+        <EntityType Name="sprzet_typ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="typ_sprzetu" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="sprzet" Relationship="Self.sprzet_sprzet_typ" FromRole="sprzet_typ" ToRole="sprzet" />
+        </EntityType>
+        <EntityType Name="zaklad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="nazwa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="kierownik" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="pracownik" Relationship="Self.pracownik_zaklad_kierow" FromRole="zaklad" ToRole="pracownik" />
+          <NavigationProperty Name="sala" Relationship="Self.sala_zaklad" FromRole="zaklad" ToRole="sala" />
+        </EntityType>
+        <Association Name="konto_konto_typ">
+          <End Role="konto_typ" Type="Self.konto_typ" Multiplicity="1" />
+          <End Role="konto" Type="Self.konto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="konto_typ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="konto">
+              <PropertyRef Name="konto_typ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="konto_pracownik">
+          <End Role="pracownik" Type="Self.pracownik" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="konto" Type="Self.konto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pracownik">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="konto">
+              <PropertyRef Name="pracownik_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="raport_konto">
+          <End Role="konto" Type="Self.konto" Multiplicity="0..1" />
+          <End Role="raport" Type="Self.raport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="konto">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="raport">
+              <PropertyRef Name="konto_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="pracownik_sala">
+          <End Role="sala" Type="Self.sala" Multiplicity="0..1" />
+          <End Role="pracownik" Type="Self.pracownik" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sala">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pracownik">
+              <PropertyRef Name="sala_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="pracownik_zaklad_kierow">
+          <End Role="pracownik" Type="Self.pracownik" Multiplicity="1" />
+          <End Role="zaklad" Type="Self.zaklad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pracownik">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zaklad">
+              <PropertyRef Name="kierownik" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sala_typ_sala">
+          <End Role="sala_typ" Type="Self.sala_typ" Multiplicity="1" />
+          <End Role="sala" Type="Self.sala" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sala_typ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sala">
+              <PropertyRef Name="sala_typ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sala_zaklad">
+          <End Role="zaklad" Type="Self.zaklad" Multiplicity="0..1" />
+          <End Role="sala" Type="Self.sala" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="zaklad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sala">
+              <PropertyRef Name="zaklad_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sprzet_sala">
+          <End Role="sala" Type="Self.sala" Multiplicity="1" />
+          <End Role="sprzet" Type="Self.sprzet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sala">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sprzet">
+              <PropertyRef Name="sala_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="sprzet_sprzet_typ">
+          <End Role="sprzet_typ" Type="Self.sprzet_typ" Multiplicity="1" />
+          <End Role="sprzet" Type="Self.sprzet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sprzet_typ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sprzet">
+              <PropertyRef Name="sprzet_typ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StocktakingDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="konto" EntityType="Self.konto" />
+          <EntitySet Name="konto_typ" EntityType="Self.konto_typ" />
+          <EntitySet Name="pracownik" EntityType="Self.pracownik" />
+          <EntitySet Name="raport" EntityType="Self.raport" />
+          <EntitySet Name="sala" EntityType="Self.sala" />
+          <EntitySet Name="sala_typ" EntityType="Self.sala_typ" />
+          <EntitySet Name="sprzet" EntityType="Self.sprzet" />
+          <EntitySet Name="sprzet_typ" EntityType="Self.sprzet_typ" />
+          <EntitySet Name="zaklad" EntityType="Self.zaklad" />
+          <AssociationSet Name="konto_konto_typ" Association="Self.konto_konto_typ">
+            <End Role="konto_typ" EntitySet="konto_typ" />
+            <End Role="konto" EntitySet="konto" />
+          </AssociationSet>
+          <AssociationSet Name="konto_pracownik" Association="Self.konto_pracownik">
+            <End Role="pracownik" EntitySet="pracownik" />
+            <End Role="konto" EntitySet="konto" />
+          </AssociationSet>
+          <AssociationSet Name="raport_konto" Association="Self.raport_konto">
+            <End Role="konto" EntitySet="konto" />
+            <End Role="raport" EntitySet="raport" />
+          </AssociationSet>
+          <AssociationSet Name="pracownik_sala" Association="Self.pracownik_sala">
+            <End Role="sala" EntitySet="sala" />
+            <End Role="pracownik" EntitySet="pracownik" />
+          </AssociationSet>
+          <AssociationSet Name="pracownik_zaklad_kierow" Association="Self.pracownik_zaklad_kierow">
+            <End Role="pracownik" EntitySet="pracownik" />
+            <End Role="zaklad" EntitySet="zaklad" />
+          </AssociationSet>
+          <AssociationSet Name="sala_typ_sala" Association="Self.sala_typ_sala">
+            <End Role="sala_typ" EntitySet="sala_typ" />
+            <End Role="sala" EntitySet="sala" />
+          </AssociationSet>
+          <AssociationSet Name="sala_zaklad" Association="Self.sala_zaklad">
+            <End Role="zaklad" EntitySet="zaklad" />
+            <End Role="sala" EntitySet="sala" />
+          </AssociationSet>
+          <AssociationSet Name="sprzet_sala" Association="Self.sprzet_sala">
+            <End Role="sala" EntitySet="sala" />
+            <End Role="sprzet" EntitySet="sprzet" />
+          </AssociationSet>
+          <AssociationSet Name="sprzet_sprzet_typ" Association="Self.sprzet_sprzet_typ">
+            <End Role="sprzet_typ" EntitySet="sprzet_typ" />
+            <End Role="sprzet" EntitySet="sprzet" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StocktakingDatabaseModelStoreContainer" CdmEntityContainer="StocktakingDatabaseEntities">
+          <EntitySetMapping Name="konto">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.konto">
+              <MappingFragment StoreEntitySet="konto">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="haslo" ColumnName="haslo" />
+                <ScalarProperty Name="konto_typ_id" ColumnName="konto_typ_id" />
+                <ScalarProperty Name="pracownik_id" ColumnName="pracownik_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="konto_typ">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.konto_typ">
+              <MappingFragment StoreEntitySet="konto_typ">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pracownik">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.pracownik">
+              <MappingFragment StoreEntitySet="pracownik">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="imie" ColumnName="imie" />
+                <ScalarProperty Name="nazwisko" ColumnName="nazwisko" />
+                <ScalarProperty Name="sala_id" ColumnName="sala_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="raport">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.raport">
+              <MappingFragment StoreEntitySet="raport">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="data" ColumnName="data" />
+                <ScalarProperty Name="raport1" ColumnName="raport" />
+                <ScalarProperty Name="konto_id" ColumnName="konto_id" />
+                <ScalarProperty Name="imie_nazwisko" ColumnName="imie_nazwisko" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sala">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.sala">
+              <MappingFragment StoreEntitySet="sala">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="numer" ColumnName="numer" />
+                <ScalarProperty Name="pojemnosc" ColumnName="pojemnosc" />
+                <ScalarProperty Name="sala_typ_id" ColumnName="sala_typ_id" />
+                <ScalarProperty Name="zaklad_id" ColumnName="zaklad_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sala_typ">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.sala_typ">
+              <MappingFragment StoreEntitySet="sala_typ">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="typ_sali" ColumnName="typ_sali" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sprzet">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.sprzet">
+              <MappingFragment StoreEntitySet="sprzet">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="sprzet_typ_id" ColumnName="sprzet_typ_id" />
+                <ScalarProperty Name="sala_id" ColumnName="sala_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sprzet_typ">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.sprzet_typ">
+              <MappingFragment StoreEntitySet="sprzet_typ">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="typ_sprzetu" ColumnName="typ_sprzetu" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="zaklad">
+            <EntityTypeMapping TypeName="StocktakingDatabaseModel.zaklad">
+              <MappingFragment StoreEntitySet="zaklad">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="kierownik" ColumnName="kierownik" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

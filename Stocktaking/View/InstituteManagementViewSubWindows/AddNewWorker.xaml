@@ -1,0 +1,38 @@
+﻿<Window x:Class="Stocktaking.View.InstituteManagementViewSubWindows.AddNewWorker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AddNewWorker" Height="303.383" Width="532.331" MinHeight="303" MinWidth="532" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="125*"/>
+            <ColumnDefinition Width="137*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="229*"/>
+            <RowDefinition Height="43*"/>
+        </Grid.RowDefinitions>
+        <DataGrid Margin="5" ColumnWidth="*" IsReadOnly="True" AutoGenerateColumns="False" Grid.Column="0" 
+                  Grid.Row="0"  ItemsSource="{Binding}" x:Name="WorkerDataGrid" SelectionChanged="WorkerDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="25*" Header="Id" Binding="{Binding id}"  />
+                <DataGridTextColumn Width="40*" Header="Imię" Binding="{Binding imie}" />
+                <DataGridTextColumn Width="60*" Header="Nazwisko" Binding="{Binding nazwisko}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock TextWrapping="Wrap"  Grid.Row="0" Grid.Column="1" 
+                    Margin="5,5,5,201" x:Name="InstituteTextBlock"/>
+
+        <DataGrid Margin="5,33,5,5" ColumnWidth="*" IsReadOnly="True" AutoGenerateColumns="False" Grid.Column="1"
+                  Grid.Row="0"  ItemsSource="{Binding}" x:Name="RoomDataGrid" SelectionChanged="RoomDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="16*" Header="Numer" Binding="{Binding numer}"  />
+                <DataGridTextColumn Width="18*" Header="Rozmiar" Binding="{Binding pojemnosc}" />
+                <DataGridTextColumn Width="50*" Header="Typ" Binding="{Binding sala_typ.typ_sali}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="1" IsEnabled="False" x:Name="SelectButton" Content="Wybierz" Margin="40,5,50,0" Height="25" VerticalAlignment="Top" Click="SelectButton_Click"  />
+        <Button Grid.Row="1" x:Name="CanselButton" Content="Anuluj" Margin="50,5,40,0" Height="25" VerticalAlignment="Top" Grid.Column="1" Click="CanselButton_Click"  />
+    </Grid>
+</Window>

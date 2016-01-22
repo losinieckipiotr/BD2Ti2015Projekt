@@ -1,0 +1,63 @@
+﻿<Window x:Class="Stocktaking.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Inwentaryzacja" Height="600" Width="800"
+        xmlns:view="clr-namespace:Stocktaking.View"
+        xmlns:viewModel="clr-namespace:Stocktaking.ViewModel" Loaded="Window_Loaded">
+
+    <Window.Resources>
+
+    </Window.Resources>
+    
+    <DockPanel>
+
+        <view:MenuView x:Name="Logout" DockPanel.Dock="Top" Visibility="Collapsed"/>
+        
+        <Grid>
+            
+            <view:LoginView x:Name="LoginControl" Visibility="Visible" />
+
+            <!-- operowanie na parametrze visibility-->
+            <TabControl x:Name="TabControlMenu" Visibility="Collapsed" Margin="0,5,0,0">
+
+                <TabItem x:Name="UserAccount" Header="Konta Użytkowników">
+                    <Grid Background="#FFE5E5E5">
+                        <view:UserAccountView x:Name="UserAccountControl"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Rooms" Header="Sale">
+                    <Grid Background="#FFE5E5E5">
+                        <view:Rooms x:Name="RoomsControl"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="InstituteManagment" Header="Zakłady">
+                    <Grid Background="#FFE5E5E5">
+                        <view:InstituteManagementView x:Name="InstituteManagementControl"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Dictionary" Header="Słowniki">
+                    <Grid Background="#FFE5E5E5">
+                        <view:DictionaryView x:Name="DictionaryControl"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="InstituteDevicesManagment" Header="Sprzęt instytutu">
+                    <Grid Background="#FFE5E5E5">
+                        <view:InstituteDevicesListView/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="InstituteWorkersManagment" Header="Pracownicy instytutu">
+                    <Grid Background="#FFE5E5E5">
+                        <view:InstituteWorkersListView/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Raports" Header="Raporty">
+                    <Grid Background="#FFE5E5E5">
+                        <view:RaportsView x:Name="RaportsControl"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+
+        </Grid>
+        
+    </DockPanel>
+</Window>
