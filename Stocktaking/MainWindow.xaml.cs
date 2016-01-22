@@ -29,6 +29,7 @@ namespace Stocktaking
         {
             LoginControl.focusLogin();
             StocktakingViewModel.CreateStocktaking(this);
+            MessageBox.Show("Hello world.");
         }
         // metoda zmienia visibility każdej zakładki
         public void ChangeVisibility(int index=0,
