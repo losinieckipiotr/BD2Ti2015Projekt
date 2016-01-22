@@ -6,17 +6,13 @@
              xmlns:Stocktaking="clr-namespace:Stocktaking" xmlns:local="clr-namespace:Stocktaking.View" x:Class="Stocktaking.View.UserAccountView" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800" IsVisibleChanged="UserControl_IsVisibleChanged">
+    
     <UserControl.Resources>
-        
-        <!--
-        <CollectionViewSource x:Key="kontoViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:konto}, CreateList=True}"/>
-        -->
-        
         <CollectionViewSource x:Key="konto_typViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:konto_typ}, CreateList=True}"/>
         <CollectionViewSource x:Key="pracownikViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:pracownik}, CreateList=True}"/>
         <CollectionViewSource x:Key="userRecordViewSource" d:DesignSource="{d:DesignInstance {x:Type local:UserRecord}, CreateList=True}"/>
-        
     </UserControl.Resources>
+    
     <Grid Background="White" DataContext="{StaticResource userRecordViewSource}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="280"/>
@@ -85,7 +81,7 @@
 
         <StackPanel Grid.Row="1">
             <Label Content="Wybierz pracownika bay dodać konto:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
-            <DataGrid x:Name="pracownikDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource pracownikViewSource}}" Margin="5" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True">
+            <DataGrid x:Name="pracownikDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource pracownikViewSource}}" Margin="5,5,5,10" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="pracIdColum" Binding="{Binding id}" Header="Id" Width="40"/>
                     <DataGridTextColumn x:Name="pracImieColumn" Binding="{Binding imie}" Header="Imię" Width="65"/>
