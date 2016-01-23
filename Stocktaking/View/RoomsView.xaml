@@ -7,17 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="550" d:DesignWidth="800"
              IsVisibleChanged="UserControl_IsVisibleChanged">
-    
+
     <UserControl.Resources>
         <CollectionViewSource x:Key="sala_typViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:sala_typ}, CreateList=True}"/>
         <CollectionViewSource x:Key="zakladViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:zaklad}, CreateList=True}"/>
         <CollectionViewSource x:Key="roomRecordViewSource" d:DesignSource="{d:DesignInstance {x:Type local:RoomRecord}, CreateList=True}"/>
     </UserControl.Resources>
-    
+
     <Grid Background="White" DataContext="{StaticResource roomRecordViewSource}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="201*"/>
+            <RowDefinition Height="349*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="500"/>
@@ -52,14 +52,14 @@
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomNumber" Text="{Binding numer, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" Height="26" VerticalAlignment="Center"/>
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomCapacity" Text="{Binding pojemnosc, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" Height="26" />
             <ComboBox Margin="5,5,5,0" x:Name="RoomType" ItemsSource="{Binding Source={StaticResource sala_typViewSource}}" DisplayMemberPath="typ_sali" Height="26" VerticalAlignment="Center"/>
-            <TextBlock TextWrapping="Wrap" Text="{Binding zaklad.nazwa}" Margin ="5,5,5,0" x:Name="RoomInstitute" HorizontalAlignment="Left" MaxWidth="170"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding zaklad.nazwa}" Margin ="5,5,5,0" x:Name="RoomInstitute" HorizontalAlignment="Left"/>
         </StackPanel>
-        
-        <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" >
+
+        <StackPanel Grid.Column="3" Grid.Row="1">
             <Button x:Name="RoomUpdate" Content="Aktualizuj" Click="RoomUpdate_Click" Height="26" Margin="5,5,5,0"/>
             <Button x:Name="RoomAdd" Click="RoomAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26"/>
             <Button x:Name="RoomDelete" Click="RoomDelete_Click" Content="Usuń" Margin="5,5,5,0" Height="26"/>
         </StackPanel>
-        
+
     </Grid>
 </UserControl>

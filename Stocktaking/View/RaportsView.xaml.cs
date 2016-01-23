@@ -37,46 +37,15 @@ namespace Stocktaking.View
             InitializeComponent();
         }
 
-        //private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
-        //    {
-        //        db = ViewLogic.db;
-        //        if (db == null)
-        //            return;
-
-        //        userAcc = StocktakingViewModel.Stocktaking.GetUser;
-
-        //        if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))
-        //        {
-        //            if (Room.IsChecked == true)
-        //            {
-        //                Room_Checked(sender, e);
-        //            }
-        //            else if (Worker.IsChecked == true)
-        //            {
-        //                Worker_Checked(sender, e);
-        //            }
-        //            else if (Device.IsChecked == true)
-        //            {
-        //                Device_Checked(sender, e);
-        //            }
-        //            else if (RoomMan.IsChecked == true)
-        //            {
-        //                RoomMan_Checked(sender, e);
-        //            }
-        //            else if (DeviceMan.IsChecked == true)
-        //            {
-        //                DeviceMan_Checked(sender, e);
-        //            }
-        //        }
-        //    }
-        //}
-
+        //Uwaga: Ta zakladka laduje sie podejzanie dlugo
+        //Nie wiem co to za funckje operujace na typach dynamicznych, ale z tego co slyszalem
+        //to typy dynamiczne zabijaja wydajnosc :/
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            try
             {
+                if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                    return;
                 db = ViewLogic.db;
                 if (db == null || loadUI == false)
                     return;
@@ -121,6 +90,11 @@ namespace Stocktaking.View
                 }
                 upData();
                 loadUI = false;
+            }
+            catch (Exception)
+            {
+                
+                throw;
             }
         }
         // zmienia ui pod dyrektora zakładu

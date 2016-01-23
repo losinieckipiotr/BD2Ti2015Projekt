@@ -35,8 +35,10 @@ namespace Stocktaking.View
 
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            try
             {
+                if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                    return;
                 db = ViewLogic.db;
                 if (db == null || loadUI == false)
                     return;
@@ -62,6 +64,11 @@ namespace Stocktaking.View
                         break;
                 }
                 loadUI = false;
+            }
+            catch (Exception)
+            {
+                
+                throw;
             }
         }
 

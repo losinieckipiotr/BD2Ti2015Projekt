@@ -36,14 +36,16 @@ namespace Stocktaking.View
 
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this) &&this.Visibility==Visibility.Visible)
+            try
             {
+                if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                    return;
                 db = ViewLogic.db;
                 if (db == null || loadUI == false)
                     return;
 
                 System.Windows.Data.CollectionViewSource sprzet_typViewSource =
-                    ((System.Windows.Data.CollectionViewSource)(this.FindResource("sprzet_typViewSource")));
+                   ((System.Windows.Data.CollectionViewSource)(this.FindResource("sprzet_typViewSource")));
                 db.sprzet_typ.Load();
                 sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList().OrderBy(t => t.id);
 
@@ -53,6 +55,11 @@ namespace Stocktaking.View
                 sala_typViewSource.Source = db.sala_typ.Local.ToBindingList().OrderBy(s => s.id);
 
                 loadUI = false;
+            }
+            catch (Exception)
+            {
+                
+                throw;
             }
         }
 
@@ -250,7 +257,6 @@ namespace Stocktaking.View
         {
             System.Windows.Data.CollectionViewSource sprzet_typViewSource =
                 ((System.Windows.Data.CollectionViewSource)(this.FindResource("sprzet_typViewSource")));
-            sprzet_typViewSource.Source = null;
             sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList().OrderBy(t => t.id);
         }
 
@@ -258,7 +264,6 @@ namespace Stocktaking.View
         {
             System.Windows.Data.CollectionViewSource sala_typViewSource =
                 ((System.Windows.Data.CollectionViewSource)(this.FindResource("sala_typViewSource")));
-            sala_typViewSource.Source = null;
             sala_typViewSource.Source = db.sala_typ.Local.ToBindingList().OrderBy(s => s.id);
         }
     }

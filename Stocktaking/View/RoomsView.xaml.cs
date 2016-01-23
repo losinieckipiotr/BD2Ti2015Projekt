@@ -59,13 +59,16 @@ namespace Stocktaking.View
 
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            try
             {
+                if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                    return;
                 db = ViewLogic.db;
                 if (db == null || loadUI == false)
                     return;
 
-                System.Windows.Data.CollectionViewSource roomRecordViewSource = (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
+                System.Windows.Data.CollectionViewSource roomRecordViewSource =
+                    (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
                 db.sala.Load();
                 List<sala> sale = db.sala.Local.ToList();
                 List<RoomRecord> rekordy = new List<RoomRecord>();
@@ -75,15 +78,22 @@ namespace Stocktaking.View
                 }
                 roomRecordViewSource.Source = rekordy.OrderBy(r => r.id);
 
-                System.Windows.Data.CollectionViewSource sala_typViewSource = (System.Windows.Data.CollectionViewSource)this.Resources["sala_typViewSource"];
+                System.Windows.Data.CollectionViewSource sala_typViewSource =
+                    (System.Windows.Data.CollectionViewSource)this.Resources["sala_typViewSource"];
                 db.sala_typ.Load();
                 sala_typViewSource.Source = db.sala_typ.Local.ToBindingList();
 
-                System.Windows.Data.CollectionViewSource zakladViewSource = (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
+                System.Windows.Data.CollectionViewSource zakladViewSource =
+                    (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
                 db.zaklad.Load();
                 zakladViewSource.Source = db.zaklad.Local.ToBindingList();
 
                 loadUI = false;
+            }
+            catch (Exception)
+            {
+                
+                throw;
             }
         }
 
@@ -229,7 +239,8 @@ namespace Stocktaking.View
 
         private void OdswiezSale()
         {
-            System.Windows.Data.CollectionViewSource roomRecordViewSource = (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
+            System.Windows.Data.CollectionViewSource roomRecordViewSource =
+                (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
             db.sala.Load();
             List<sala> sale = db.sala.Local.ToList();
             List<RoomRecord> rekordy = new List<RoomRecord>();
