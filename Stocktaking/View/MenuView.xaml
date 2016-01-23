@@ -14,7 +14,7 @@
         <MenuItem Header="Pomoc">
             <MenuItem Header="Pomoc" Click="Help_Click"/>
             <Separator/>
-            <MenuItem Header="O programie"/>
+            <MenuItem Header="O programie" Click="About_Click"/>
         </MenuItem>
     </Menu>
 </UserControl>

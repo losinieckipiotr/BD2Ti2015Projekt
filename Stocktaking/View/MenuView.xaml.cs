@@ -51,5 +51,18 @@ namespace Stocktaking.View
             string myPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Help\", "StocktakingHelp.chm");
             System.Diagnostics.Process.Start(myPath);
         }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            string msg = "Aplikacja na projekt z Przedmiotu BD II\n";
+            msg += "Autorzy:\n";
+            msg += "Piotr Łosiniecki\n";
+            msg += "Szymon Miech\n";
+            msg += "Daniel Mikolas\n";
+            msg += "Łukasz Okoń\n";
+            msg += "Politechnika Śląska 2015";
+            MessageBox.Show
+                (msg, "O programie", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }
