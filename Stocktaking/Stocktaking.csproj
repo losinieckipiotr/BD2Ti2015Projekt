@@ -152,6 +152,9 @@
     <Compile Include="View\RaportsViewSubWindows\SelectOldRaport.xaml.cs">
       <DependentUpon>SelectOldRaport.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UserAccountViewSubWindows\ChangePassword.xaml.cs">
+      <DependentUpon>ChangePassword.xaml</DependentUpon>
+    </Compile>
     <Compile Include="zaklad.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
     </Compile>
@@ -237,6 +240,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserAccountView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserAccountViewSubWindows\ChangePassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

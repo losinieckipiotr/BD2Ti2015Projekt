@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Security.Cryptography;
 using System.Data.Entity;
 using Stocktaking.ViewModel;
 
@@ -53,8 +52,10 @@ namespace Stocktaking.View
 
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            try
             {
+                if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                    return;
                 db = ViewLogic.db;
                 if (db == null || loadUI == false)
                     return;
@@ -77,14 +78,17 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource pracownikViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
-                var pracownicy = from p in db.pracownik
-                                 where p.konto.Count == 0
-                                 select p;
-                pracownikViewSource.Source = pracownicy.ToList();
+                List<pracownik> pr = db.pracownik.Where( p => p.konto.Count == 0).ToList();
+                pracownikViewSource.Source = pr;
 
                 typComboBox.ItemsSource = db.konto_typ.Local.ToList().OrderBy(t => t.id);
 
                 loadUI = false;
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
 
@@ -153,6 +157,22 @@ namespace Stocktaking.View
             }
         }
 
+        private void hasloButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                konto k = ((UserRecord)userRecordDataGrid.SelectedItem).konto;
+                new UserAccountViewSubWindows.ChangePassword(k).ShowDialog();
+
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
+
         private void dodajButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -185,8 +205,7 @@ namespace Stocktaking.View
                     powtorzPassBox.Clear();
                     return;
                 }
-                SHA512 shaM = new SHA512Managed();
-                byte[] sha = shaM.ComputeHash(Encoding.Unicode.GetBytes(haslo));
+                byte[] sha = ViewLogic.ObliczSHA(haslo);
 
                 int noweId = 1;
                 foreach (konto k in db.konto.Local.OrderBy(k => k.id))
@@ -263,10 +282,8 @@ namespace Stocktaking.View
         {
             System.Windows.Data.CollectionViewSource pracownikViewSource =
                 ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
-            var pracownicy = from p in db.pracownik
-                             where p.konto.Count == 0
-                             select p;
-            pracownikViewSource.Source = pracownicy.ToList();
+            List<pracownik> pr = db.pracownik.Where(p => p.konto.Count == 0).ToList();
+            pracownikViewSource.Source = pr;
         }
     }
 }

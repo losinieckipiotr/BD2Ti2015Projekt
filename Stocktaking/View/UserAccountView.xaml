@@ -61,6 +61,7 @@
             <Button x:Name="loginButton" Width="120" Height="26" Margin="5,5,5,0" Click="loginButton_Click" HorizontalAlignment="Center" Content="Zmień login"/>
             <Button x:Name="usunButton" Width="120" Height="26" Margin="5,5,5,0" Click="usunButton_Click" HorizontalAlignment="Center" Content="Usuń konto"/>
             <Button x:Name="typButton" Width="120" Height="26" Margin="5,5,5,0" Click="typButton_Click" HorizontalAlignment="Center" Content="Zmien typ konta"/>
+            <Button x:Name="hasloButton" Width="120" Height="26" Margin="5,5,5,0" Click="hasloButton_Click" HorizontalAlignment="Center" Content="Zmień hasło"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2" Grid.Row="1">

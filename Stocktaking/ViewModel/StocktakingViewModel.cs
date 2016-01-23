@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Security.Cryptography;
 using System.Windows;
 namespace Stocktaking.ViewModel
 {
@@ -57,8 +56,7 @@ namespace Stocktaking.ViewModel
                 ViewLogic.InitDataBase();
                 db = ViewLogic.db;
 
-                SHA512 sha = new SHA512Managed();
-                byte[] passwordAfter = sha.ComputeHash(Encoding.Unicode.GetBytes(password));
+                byte[] passwordAfter = ViewLogic.ObliczSHA(password);
 
                 var tempAcc = db.konto.SingleOrDefault(o => (o.login == login));
                 if (tempAcc == null)
@@ -155,6 +153,7 @@ namespace Stocktaking.ViewModel
             MessageBox.Show("Błędne hasło lub login.", "Coś poszło nie tak.");
         }
 
+        //Co to robi?? Po co to??
         public void DeleteItemFromKonto(int id)
         {
             var itemToDelete = db.konto.SingleOrDefault(x => x.id == id);

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.Entity;
+using System.Security.Cryptography;
 
 namespace Stocktaking.ViewModel
 {
@@ -29,6 +30,13 @@ namespace Stocktaking.ViewModel
         {
             db.Dispose();
             db = null;
+        }
+
+        static public byte[] ObliczSHA(string haslo)
+        {
+            SHA512 shaM = new SHA512Managed();
+            byte[] sha = shaM.ComputeHash(Encoding.Unicode.GetBytes(haslo));
+            return sha;
         }
 
         static public bool Potwierdz(string pytanie)
