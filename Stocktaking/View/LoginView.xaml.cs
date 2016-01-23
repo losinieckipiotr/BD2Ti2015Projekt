@@ -49,8 +49,8 @@ namespace Stocktaking.View
             string pass = password.Password;
             if (StocktakingViewModel.Stocktaking.NewLogin(log, pass))
             {
-                login.Text = "";
-                password.Password = "";
+                login.Clear();
+                password.Clear();
             }
         }
     }

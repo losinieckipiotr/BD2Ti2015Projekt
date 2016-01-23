@@ -54,7 +54,7 @@ namespace Stocktaking.ViewModel
             try
             {
                 ViewLogic.InitDataBase();
-                db = ViewLogic.db;
+                db = ViewLogic.dbContext;
 
                 byte[] passwordAfter = ViewLogic.ObliczSHA(password);
 

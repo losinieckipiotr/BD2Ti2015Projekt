@@ -63,7 +63,7 @@ namespace Stocktaking.View
             {
                 if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                     return;
-                db = ViewLogic.db;
+                db = ViewLogic.dbContext;
                 if (db == null || loadUI == false)
                     return;
 

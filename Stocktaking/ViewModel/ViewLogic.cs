@@ -19,17 +19,29 @@ namespace Stocktaking.ViewModel
 {
     static class ViewLogic
     {
-        static public StocktakingDatabaseEntities db = null;
+        static private StocktakingDatabaseEntities db = null;
+
+        static public StocktakingDatabaseEntities dbContext
+        {
+            get
+            {
+                return db;
+            }
+        }
 
         static public void InitDataBase()
         {
-            db = new StocktakingDatabaseEntities();
+            if(db == null)
+                db = new StocktakingDatabaseEntities();
         }
 
         static public void DisposeDatabase()
         {
-            db.Dispose();
-            db = null;
+            if (db != null)
+            {
+                db.Dispose();
+                db = null;
+            }
         }
 
         static public byte[] ObliczSHA(string haslo)
