@@ -40,7 +40,7 @@ namespace Stocktaking.View
             if (s.zaklad != null)
                 this.zaklad = s.zaklad.nazwa;
             else
-                this.zaklad = null;
+                this.zaklad = "Sala międzyzakładowa";
             this.s = s;
         }
     }
@@ -137,13 +137,16 @@ namespace Stocktaking.View
                 RoomRecord r = (RoomRecord)salaDataGrid.SelectedItem;
                 sala_typ st = (sala_typ)RoomType.SelectedItem;
                 int nowyNumer = Convert.ToInt32(RoomNumber.Text);
-                bool numerZajety = db.sala.Any(s => s.numer == nowyNumer);
-                if (numerZajety)
+                if (r.numer != nowyNumer)
                 {
-                    ViewLogic.Blad("Isnieje już sala o podanym numerze!");
-                    return;
+                    bool numerZajety = db.sala.Any(s => s.numer == nowyNumer);
+                    if (numerZajety)
+                    {
+                        ViewLogic.Blad("Isnieje już sala o podanym numerze!");
+                        return;
+                    }
+                    r.s.numer = nowyNumer;
                 }
-                r.s.numer = nowyNumer;
                 r.s.pojemnosc = Convert.ToInt32(RoomCapacity.Text);
                 r.s.sala_typ = st;
 
