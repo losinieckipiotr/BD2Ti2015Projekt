@@ -101,17 +101,17 @@ namespace Stocktaking.View
         {
             try
             {
-                RoomRecord r = null;
-                if (salaDataGrid.SelectedItem != null)
-                    r = (RoomRecord)salaDataGrid.SelectedItem;
-                if (r != null)
-                {
-                    RoomType.SelectedItem = (sala_typ)r.s.sala_typ;
-                    if (r.zaklad != null)
-                        RoomInstitute.Text = r.zaklad;
-                    else
-                        RoomInstitute.Text = "";
-                }
+                //RoomRecord r = null;
+                //if (salaDataGrid.SelectedItem != null)
+                //    r = (RoomRecord)salaDataGrid.SelectedItem;
+                //if (r != null)
+                //{
+                //    RoomType.SelectedItem = (sala_typ)r.s.sala_typ;
+                //    if (r.zaklad != null)
+                //        RoomInstitute.Text = r.zaklad;
+                //    else
+                //        RoomInstitute.Text = "";
+                //}
             }
             catch (Exception)
             {

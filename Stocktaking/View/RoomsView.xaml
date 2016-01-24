@@ -14,20 +14,19 @@
         <CollectionViewSource x:Key="roomRecordViewSource" d:DesignSource="{d:DesignInstance {x:Type local:RoomRecord}, CreateList=True}"/>
     </UserControl.Resources>
 
-    <Grid Background="White" DataContext="{StaticResource roomRecordViewSource}">
+    <Grid Background="White" DataContext="{StaticResource roomRecordViewSource}" Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="201*"/>
-            <RowDefinition Height="349*"/>
+            <RowDefinition Height="177*"/>
+            <RowDefinition Height="98*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500"/>
-            <ColumnDefinition Width="1"/>
-            <ColumnDefinition Width="75"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Label Content="Lista sal:" Margin="0,5,0,0"/>
-        <DataGrid x:Name="salaDataGrid" DataContext="{StaticResource roomRecordViewSource}" EnableRowVirtualization="True" Margin="5,35,5,5" ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionChanged="salaDataGrid_SelectionChanged" IsReadOnly="True" Grid.RowSpan="2">
+        <DataGrid x:Name="salaDataGrid" DataContext="{StaticResource roomRecordViewSource}" EnableRowVirtualization="True" Margin="5,35,5,5" Grid.ColumnSpan="3" ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionChanged="salaDataGrid_SelectionChanged" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="salaIdColumn" Binding="{Binding id}" Header="Id" Width="30" MinWidth="30"/>
                 <DataGridTextColumn x:Name="salaNumerColumn" Binding="{Binding numer}" Header="Numer"/>
@@ -37,9 +36,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-
-        <StackPanel Grid.Column="2">
+        <StackPanel Grid.Row="1">
             <Label Content="Id:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Numer:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Pojemność:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
@@ -47,18 +44,18 @@
             <Label Content="Zakład:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="3" DataContext="{StaticResource roomRecordViewSource}">
+        <StackPanel Grid.Column="1" Grid.Row="1" DataContext="{StaticResource roomRecordViewSource}">
             <Label FontWeight="Bold" x:Name="RoomId" Content="{Binding id, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" Margin="5,5,5,0" Height="26" VerticalAlignment="Center"/>
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomNumber" Text="{Binding numer, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" Height="26" VerticalAlignment="Center"/>
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomCapacity" Text="{Binding pojemnosc, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" Height="26" />
             <ComboBox Margin="5,5,5,0" x:Name="RoomType" ItemsSource="{Binding Source={StaticResource sala_typViewSource}}" DisplayMemberPath="typ_sali" Height="26" VerticalAlignment="Center"/>
-            <TextBlock TextWrapping="Wrap" Text="{Binding zaklad.nazwa}" Margin ="5,5,5,0" x:Name="RoomInstitute" HorizontalAlignment="Left"/>
+            <TextBox x:Name="zakladTextBox" HorizontalAlignment="Stretch" Height="48" Margin="5,5,5,0" TextWrapping="Wrap" Text="{Binding zaklad, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" IsReadOnly="True"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="3" Grid.Row="1">
-            <Button x:Name="RoomUpdate" Content="Aktualizuj" Click="RoomUpdate_Click" Height="26" Margin="5,5,5,0"/>
-            <Button x:Name="RoomAdd" Click="RoomAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26"/>
-            <Button x:Name="RoomDelete" Click="RoomDelete_Click" Content="Usuń" Margin="5,5,5,0" Height="26"/>
+        <StackPanel Grid.Row="1" Grid.Column="2" >
+            <Button x:Name="RoomUpdate" Content="Aktualizuj" Click="RoomUpdate_Click" Height="26" Margin="5,5,5,0" Width="170" HorizontalAlignment="Left"/>
+            <Button x:Name="RoomAdd" Click="RoomAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26" Width="170" HorizontalAlignment="Left"/>
+            <Button x:Name="RoomDelete" Click="RoomDelete_Click" Content="Usuń" Margin="5,5,5,0" Height="26" Width="170" HorizontalAlignment="Left"/>
         </StackPanel>
 
     </Grid>
