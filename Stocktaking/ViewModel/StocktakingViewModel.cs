@@ -100,24 +100,28 @@ namespace Stocktaking.ViewModel
                 //index decyduje która zakładka ma zostac wybrana jako początkowa
             {
                 case 1://Administrator
+                    win.UserAccountControl.LoadUI = true;
+                    win.DictionaryControl.LoadUI = true;
                     win.ChangeVisibility(
                         index: 0,
                         Tab: Visibility.Visible,
                         UserAcc: Visibility.Visible,
                         DictionaryVis: Visibility.Visible);
-                    win.UserAccountControl.LoadUI = true;
-                    win.DictionaryControl.LoadUI = true;
                     break;
                 case 2://Dyrektor zakładu
+                    win.InstituteManagementControl.LoadUI = true;
+                    win.RaportsControl.LoadUI = true;
                     win.ChangeVisibility(
                         index:2,
                         Tab: Visibility.Visible,
                         InstituteManagmentVis: Visibility.Visible,
                         RaportsVis: Visibility.Visible);
-                    win.InstituteManagementControl.LoadUI = true;
-                    win.RaportsControl.LoadUI = true;
+
                     break;
-                case 3://kierownik instytutu               
+                case 3://kierownik instytutu
+                    win.InstituteManagementControl.LoadUI = true;
+                    win.RoomsControl.LoadUI = true;
+                    win.RaportsControl.LoadUI = true;
                     win.ChangeVisibility(
                         index: 1,
                         Tab: Visibility.Visible,
@@ -126,22 +130,19 @@ namespace Stocktaking.ViewModel
                         InstituteDevicesList: Visibility.Visible,
                         InstituteWorkersList: Visibility.Visible, 
                         RaportsVis: Visibility.Visible);
-                    win.InstituteManagementControl.LoadUI = true;
-                    win.RoomsControl.LoadUI = true;
-                    win.RaportsControl.LoadUI = true;
                     break;
                 case 4://zakładowy pracownik techniczny
+                    win.InstituteManagementControl.LoadUI = true;
                     win.ChangeVisibility(index: 2,
                         Tab: Visibility.Visible,
                         InstituteManagmentVis: Visibility.Visible);
-                    win.InstituteManagementControl.LoadUI = true;
                     break;
                 case 5:// instytutowy pracownik techniczny
+                    win.RoomsControl.LoadUI = true;
                     win.ChangeVisibility(index: 1,
                         Tab: Visibility.Visible,
                         RoomsVis: Visibility.Visible,
                         InstituteDevicesList: Visibility.Visible);
-                    win.RoomsControl.LoadUI = true;
                     break;
                 default:
                     break;
