@@ -52,6 +52,10 @@ namespace Stocktaking.View
                 login.Clear();
                 password.Clear();
             }
+            else
+            {
+                password.Clear();
+            }
         }
     }
 }

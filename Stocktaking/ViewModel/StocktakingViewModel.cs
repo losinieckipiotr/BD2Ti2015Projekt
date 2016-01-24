@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Data.Entity;
+
 namespace Stocktaking.ViewModel
 {
     class StocktakingViewModel
@@ -11,6 +13,7 @@ namespace Stocktaking.ViewModel
         private StocktakingDatabaseEntities db = null;
         private MainWindow win = null;
         private konto userAcc = null;
+        private Task initDbTask = null;
         private static StocktakingViewModel stocktaking = null;
 
         public static StocktakingViewModel Stocktaking { get { return stocktaking; } }
@@ -46,6 +49,7 @@ namespace Stocktaking.ViewModel
         public StocktakingViewModel(MainWindow win)
         {
             this.win = win;
+            InitDbAsync();
         }
 
         //logowanie
@@ -53,29 +57,31 @@ namespace Stocktaking.ViewModel
         {
             try
             {
-                ViewLogic.InitDataBase();
-                db = ViewLogic.dbContext;
+                initDbTask.Wait();
+                Task<konto> tempAcc = db.konto.SingleOrDefaultAsync(o => o.login == login);
 
                 byte[] passwordAfter = ViewLogic.ObliczSHA(password);
-
-                var tempAcc = db.konto.SingleOrDefault(o => (o.login == login));
-                if (tempAcc == null)
+                tempAcc.Wait();
+                if (tempAcc.Result == null)
                 {
-                    wrongPass();
+                    ViewLogic.Blad("Błędny login lub hasło");
                     return false;
                 }
-                byte[] passwordFromDb = tempAcc.haslo;
-
+                byte[] passwordFromDb = tempAcc.Result.haslo;
+                int[] resultTab = new int[64];
+                int result = 0;
                 for (int i = 0; i < 64; i++)
                 {
-                    if (passwordAfter[i] != passwordFromDb[i])
-                    {
-                        wrongPass();
-                        db = null;
-                        return false;
-                    }
+                    resultTab[i] = passwordAfter[0] - passwordFromDb[0];
+                    result += resultTab[i];
                 }
-                userAcc = tempAcc;
+                if (result != 0)
+                {
+                    ViewLogic.Blad("Błędny login lub hasło");
+                    return false;
+                }
+
+                userAcc = tempAcc.Result;
                 UpdataWindow();
                 return true;
             }
@@ -92,6 +98,17 @@ namespace Stocktaking.ViewModel
             userAcc = null;
             db = null;
             ViewLogic.DisposeDatabase();
+            InitDbAsync();
+        }
+
+        private void InitDbAsync()
+        {
+            initDbTask = new Task(() =>
+            {
+                ViewLogic.InitDataBase();
+                db = ViewLogic.dbContext;
+            });
+            initDbTask.Start();
         }
 
         private void UpdataWindow()
@@ -148,11 +165,6 @@ namespace Stocktaking.ViewModel
                 default:
                     break;
             }
-        }
-
-        private void wrongPass()
-        {
-            MessageBox.Show("Błędne hasło lub login.", "Coś poszło nie tak.");
         }
 
         //Co to robi?? Po co to??

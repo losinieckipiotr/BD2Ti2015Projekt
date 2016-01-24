@@ -48,9 +48,9 @@ namespace Stocktaking.View
         public UserAccountView()
         {
             InitializeComponent();
-        }
+        }  
 
-        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
             {
@@ -60,11 +60,17 @@ namespace Stocktaking.View
                 if (db == null || loadUI == false)
                     return;
 
+                //asynchroniczne operacje na bazie danych/////////////////////////////////////////////////
+                await db.konto.LoadAsync();
+                await db.konto_typ.LoadAsync();
+                List<pracownik> pr = await db.pracownik.Where(p => p.konto.Count == 0).ToListAsync();
+                //////////////////////////////////////////////////////////////////////////////////////////
+
                 System.Windows.Data.CollectionViewSource userRecordViewSource =
-                       ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
-                db.konto.Load();
-                List<konto> konta = db.konto.Local.ToList();
+                    ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
+                //db.konto.Load();
                 List<UserRecord> rekordy = new List<UserRecord>();
+                List<konto> konta = db.konto.Local.ToList();
                 foreach (konto k in konta)
                 {
                     rekordy.Add(new UserRecord(k));
@@ -72,16 +78,16 @@ namespace Stocktaking.View
                 userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
 
                 System.Windows.Data.CollectionViewSource konto_typViewSource =
-               ((System.Windows.Data.CollectionViewSource)(this.FindResource("konto_typViewSource")));
-                db.konto_typ.Load();
+                    ((System.Windows.Data.CollectionViewSource)(this.FindResource("konto_typViewSource")));
+                //db.konto_typ.Load();
                 konto_typViewSource.Source = db.konto_typ.Local.ToBindingList().OrderBy(t => t.id);
+
+                typComboBox.ItemsSource = db.konto_typ.Local.ToList().OrderBy(t => t.id);
 
                 System.Windows.Data.CollectionViewSource pracownikViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
-                List<pracownik> pr = db.pracownik.Where( p => p.konto.Count == 0).ToList();
+                //List<pracownik> pr = db.pracownik.Where(p => p.konto.Count == 0).ToList();
                 pracownikViewSource.Source = pr;
-
-                typComboBox.ItemsSource = db.konto_typ.Local.ToList().OrderBy(t => t.id);
 
                 loadUI = false;
             }
