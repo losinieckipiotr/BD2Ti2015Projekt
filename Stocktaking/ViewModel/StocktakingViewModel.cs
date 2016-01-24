@@ -121,6 +121,7 @@ namespace Stocktaking.ViewModel
                 case 3://kierownik instytutu
                     win.InstituteManagementControl.LoadUI = true;
                     win.RoomsControl.LoadUI = true;
+                    win.InstituteWorkersControl.LoadUI = true;
                     win.RaportsControl.LoadUI = true;
                     win.ChangeVisibility(
                         index: 1,

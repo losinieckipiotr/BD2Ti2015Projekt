@@ -47,7 +47,7 @@
                 </TabItem>
                 <TabItem x:Name="InstituteWorkersManagment" Header="Pracownicy instytutu">
                     <Grid Background="#FFE5E5E5">
-                        <view:InstituteWorkersListView/>
+                        <view:InstituteWorkersListView x:Name="InstituteWorkersControl"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="Raports" Header="Raporty">
