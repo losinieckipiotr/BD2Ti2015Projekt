@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Stocktaking.View.InstituteManagementViewSubWindows.AddNewInstitute"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AddNewInstitute" Height="315.286" Width="503.542" MinHeight="315" MinWidth="503" Loaded="Window_Loaded">
+        Title="Dodaj zakład" Height="315.286" Width="503.542" MinHeight="315" MinWidth="503" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="174*"/>

@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Stocktaking.View.InstituteManagementViewSubWindows.AddDevice"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AddDevice" Height="367.925" Width="612.12" MinHeight="367" MinWidth="612" Loaded="Window_Loaded">
+        Title="Dodaj urządzenie" Height="367.925" Width="612.12" MinHeight="367" MinWidth="612" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="34*"/>

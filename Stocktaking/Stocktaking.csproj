@@ -81,42 +81,53 @@
     </ApplicationDefinition>
     <Compile Include="konto.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="konto_typ.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="pracownik.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="raport.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="sala.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="sala_typ.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="sprzet.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="sprzet_typ.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="StocktakingEF.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StocktakingEF.Context.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="StocktakingEF.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="StocktakingEF.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StocktakingEF.edmx</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="ViewModel\ViewLogic.cs" />
     <Compile Include="View\InstituteDevicesListView.xaml.cs">
@@ -157,6 +168,7 @@
     </Compile>
     <Compile Include="zaklad.cs">
       <DependentUpon>StocktakingEF.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="ViewModel\StocktakingViewModel.cs" />
     <Compile Include="View\DictionaryView.xaml.cs">
@@ -260,6 +272,7 @@
     <EntityDeploy Include="StocktakingEF.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>StocktakingEF.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EntityDeploy>
     <None Include="Properties\DataSources\konto.datasource" />
     <None Include="Properties\DataSources\konto_typ.datasource" />
@@ -271,6 +284,7 @@
     <None Include="Properties\DataSources\Stocktaking.View.WorkerRecord.datasource" />
     <None Include="StocktakingEF.edmx.diagram">
       <DependentUpon>StocktakingEF.edmx</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -285,19 +299,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="StocktakingDatabase.mdf" />
+    <Content Include="StocktakingDatabase.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="StocktakingDatabase_log.ldf">
       <DependentUpon>StocktakingDatabase.mdf</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="StocktakingEF.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>StocktakingEF.edmx</DependentUpon>
       <LastGenOutput>StocktakingEF.Context.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="StocktakingEF.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>StocktakingEF.edmx</DependentUpon>
       <LastGenOutput>StocktakingEF.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

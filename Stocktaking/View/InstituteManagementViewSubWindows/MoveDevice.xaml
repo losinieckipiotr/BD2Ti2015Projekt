@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Stocktaking.View.InstituteManagementViewSubWindows.MoveDevice"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MoveDevice" Height="438.609" Width="489.473" MinHeight="438" MinWidth="489">
+        Title="Przenieś urządzenie" Height="438.609" Width="489.473" MinHeight="438" MinWidth="489">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="176*"/>

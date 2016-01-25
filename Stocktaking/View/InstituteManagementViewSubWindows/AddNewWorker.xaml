@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Stocktaking.View.InstituteManagementViewSubWindows.AddNewWorker"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AddNewWorker" Height="303.383" Width="532.331" MinHeight="303" MinWidth="532" Loaded="Window_Loaded">
+        Title="Dodaj pracownika" Height="303.383" Width="532.331" MinHeight="303" MinWidth="532" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="125*"/>

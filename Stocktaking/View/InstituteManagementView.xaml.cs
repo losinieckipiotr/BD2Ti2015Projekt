@@ -103,10 +103,7 @@ namespace Stocktaking.View
             DataGridInstitute.ItemsSource = null;
             DataGridInstitute.ItemsSource = db.zaklad.ToList();
             if (getSelect)
-            {
-                //Błąd z tym aktualizowaniem po pierwszej zmianie w zakładach
-                //gdy przypisuje który zakład był zaznaczony nie wywołuje się zdarzenie DataGridInstitute_SelectionChanged
-                //Dlaczego??????????????
+            {            
                 DataGridInstitute.SelectedItem = selectedZaklad;
             }
         }
@@ -262,10 +259,7 @@ namespace Stocktaking.View
         }
         private void TextBlockInstituteName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (DataGridInstitute.SelectedItem != null)
-            {
-                ChangeInstituteName.IsEnabled = true;
-            }
+                ChangeInstituteName.IsEnabled = true;         
         }
 
         //zmiana nazwy zakladu
@@ -274,7 +268,8 @@ namespace Stocktaking.View
             var zaklad = db.zaklad.SingleOrDefault(z => z.id == getSelectionZaklad.id);
             zaklad.nazwa = TextBlockInstituteName.Text;
             db.SaveChanges();
-            upData();
+           upData();
+            ChangeInstituteName.IsEnabled = false;
         }
 
         //Zmiana szefa zakladu
@@ -296,7 +291,7 @@ namespace Stocktaking.View
             upData();
         }
 
-        //usuwanie instytut NIE DZIALA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //usuwanie instytut 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             zaklad temp = db.zaklad.Single(a => a.id == getSelectionZaklad.id);
