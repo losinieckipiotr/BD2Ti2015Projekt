@@ -49,7 +49,7 @@
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomNumber" Text="{Binding numer, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" Height="26" VerticalAlignment="Center"/>
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomCapacity" Text="{Binding pojemnosc, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" Height="26" />
             <ComboBox Margin="5,5,5,0" x:Name="RoomType" ItemsSource="{Binding Source={StaticResource sala_typViewSource}}" DisplayMemberPath="typ_sali" Height="26" VerticalAlignment="Center"/>
-            <TextBox x:Name="zakladTextBox" HorizontalAlignment="Stretch" Height="48" Margin="5" TextWrapping="Wrap" Text="{Binding zaklad, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" IsReadOnly="True"/>
+            <TextBox x:Name="zakladTextBox" HorizontalAlignment="Stretch" Height="48" Margin="5" Background="Transparent" BorderThickness="0" TextWrapping="Wrap" IsReadOnly="True" Text="{Binding zaklad, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="2" >
