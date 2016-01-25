@@ -14,22 +14,22 @@
         <CollectionViewSource x:Key="roomRecordViewSource" d:DesignSource="{d:DesignInstance {x:Type local:RoomRecord}, CreateList=True}"/>
     </UserControl.Resources>
 
-    <Grid Background="White" DataContext="{StaticResource roomRecordViewSource}" Margin="0">
+    <Grid Background="White" DataContext="{StaticResource roomRecordViewSource}">
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="300"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Label Content="Lista sal:" Margin="0,5,0,0"/>
-        <DataGrid x:Name="salaDataGrid" EnableRowVirtualization="True" Margin="5,35,5,5" Grid.ColumnSpan="3" ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionChanged="salaDataGrid_SelectionChanged" IsReadOnly="True">
+        <DataGrid x:Name="salaDataGrid" EnableRowVirtualization="True" Margin="5,35,5,5" Grid.ColumnSpan="3" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="salaIdColumn" Binding="{Binding id}" Header="Id" Width="30" MinWidth="30"/>
-                <DataGridTextColumn x:Name="salaNumerColumn" Binding="{Binding numer}" Header="Numer"/>
+                <DataGridTextColumn x:Name="salaNumerColumn" Binding="{Binding numer}" Header="Numer" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="salaTypColumn" Binding="{Binding typSali}" Header="Typ sali" MinWidth="40" Width="Auto"/>
                 <DataGridTextColumn x:Name="salaPojemnoscColumn" Binding="{Binding pojemnosc}" Header="Pojemność" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="salaZakladColumn" Header="Zakład" MinWidth="90" Binding="{Binding zaklad}"/>
