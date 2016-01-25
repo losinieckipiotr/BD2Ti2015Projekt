@@ -27,7 +27,7 @@ namespace Stocktaking.View
         public int id { get; set; }
         public string imie { get; set; }
         public string nazwisko { get; set; }
-        public int sala { get; set; }
+        public string sala { get; set; }
         public string zaklad { get; set; }
         public pracownik pracownik { get; set; }
 
@@ -36,8 +36,19 @@ namespace Stocktaking.View
             this.id = p.id;
             this.imie = p.imie;
             this.nazwisko = p.nazwisko;
-            this.sala = p.sala.numer;
-            this.zaklad = p.sala.zaklad.nazwa;
+            if (p.sala != null)
+            {
+                this.sala = p.sala.numer.ToString();
+                if (p.sala.zaklad != null)
+                    this.zaklad = p.sala.zaklad.nazwa;
+                else
+                    this.zaklad = "Brak zakładu";
+            }
+            else
+            {
+                this.sala = "Brak sali";
+                this.zaklad = "Brak zakładu";
+            }
             this.pracownik = p;
         }
     }
@@ -82,6 +93,107 @@ namespace Stocktaking.View
                 
                 throw;
             }
+        }
+
+        private void pracownikUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!ViewLogic.Potwierdz("Czy chcesz zaktualizować dane pracownika?"))
+                return;
+
+                pracownik p = ((WorkerRecord)workerRecordDataGrid.SelectedItem).pracownik;
+                string newName = imieTextBox.Text;
+                string newSurname = nazwiskoTextBox.Text;
+                p.imie = newName;
+                p.nazwisko = newSurname;
+
+                db.SaveChanges();
+
+                OdswiezPracownikow();
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
+
+        private void pracowikAdd_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                 if (!ViewLogic.Potwierdz("Czy chcesz dodać pracownika?"))
+                    return;
+                
+                string noweImie = imieTextBox.Text;
+                string noweNazwisko = nazwiskoTextBox.Text;
+                if (noweImie == "" || noweNazwisko == "")
+                {
+                    ViewLogic.Blad("Nie imienia lub nazwiska!");
+                    return;
+                }
+
+                int noweId = 1;
+                foreach (pracownik p in db.pracownik.Local.OrderBy(p => p.id))
+                {
+                    if (noweId != p.id)
+                        break;
+                    else
+                        ++noweId;
+                }
+
+                pracownik nowy = new pracownik
+                {
+                    id = noweId,
+                    imie = noweImie,
+                    nazwisko = noweNazwisko
+                };
+                db.pracownik.Add(nowy);
+                db.SaveChanges();
+
+                OdswiezPracownikow();
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
+
+        private void pracownikDelete_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!ViewLogic.Potwierdz("Czy chcesz usunąć pracownika?"))
+                    return;
+
+                pracownik p = ((WorkerRecord)workerRecordDataGrid.SelectedItem).pracownik;
+
+                db.pracownik.Remove(p);
+                db.SaveChanges();
+
+                OdswiezPracownikow();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        void OdswiezPracownikow()
+        {
+            System.Windows.Data.CollectionViewSource workerRecordViewSource =
+                   ((System.Windows.Data.CollectionViewSource)(this.FindResource("workerRecordViewSource")));
+            db.pracownik.Load();
+            List<pracownik> pracownicy = db.pracownik.Local.ToList();
+            List<WorkerRecord> rekordy = new List<WorkerRecord>();
+            foreach (pracownik p in pracownicy)
+            {
+                rekordy.Add(new WorkerRecord(p));
+            }
+            workerRecordViewSource.Source = rekordy.OrderBy(r => r.id);
         }
     }
 }
