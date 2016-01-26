@@ -20,7 +20,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="160"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="160"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="165"/>
             <ColumnDefinition Width="*"/>
@@ -39,34 +39,38 @@
 
         <GridSplitter Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Stretch" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Height="1" VerticalAlignment="Center"/>
 
-        <StackPanel Grid.Row="2">
+        <Label Content="Zmień dane pracownika:" Grid.Row="2" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
+        
+        <StackPanel Grid.Row="2" Margin="0,35,0,0">
             <Label Content="Imię:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Nazwisko:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Numer sali:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Zakład:" HorizontalAlignment="Left" Margin="5,5,0,0"  VerticalAlignment="Top"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Grid.Column="1">
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,35,0,0">
             <TextBox x:Name="imieTextBox" Text="{Binding imie, Mode=OneWay}" Height="26" Margin="5,5,0,0" VerticalAlignment="Center"/>
             <TextBox x:Name="nazwiskoTextBox" Text="{Binding nazwisko, Mode=OneWay}" Height="26" Margin="5,5,0,0" VerticalAlignment="Center"/>
             <TextBox x:Name="numerSaliTextBox"  Text="{Binding sala, Mode=OneWay}" Height="26" Margin="5,5,0,0" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" IsReadOnly="True"/>
             <TextBox x:Name="zakladTextBox" Text="{Binding zaklad, Mode=OneWay}" Height="48" Margin="5,5,0,5" TextWrapping="Wrap" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" IsReadOnly="True"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Grid.Column="2">
-            <Button x:Name="pracownikUpdate" Content="Aktualizuj" Click="pracownikUpdate_Click" Height="26" Margin="5,5,0,0" Width="155" HorizontalAlignment="Left"/>
-            <Button x:Name="pracownikDelete" Click="pracownikDelete_Click" Content="Usuń" Margin="5,5,0,0" Height="26" Width="155" HorizontalAlignment="Left"/>
+        <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,35,0,0">
+            <Button x:Name="pracownikUpdate" Content="Zmień" Click="pracownikUpdate_Click" Height="26" Margin="5,5,0,0" VerticalAlignment="Center"/>
+            <Button x:Name="pracownikDelete" Click="pracownikDelete_Click" Content="Usuń" Margin="5,5,0,0" Height="26" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Grid.Column="3">
+        <Label Content="Dodaj nowego pracownika:" Grid.Row="2" Margin="5,5,0,0" Grid.ColumnSpan="2" Grid.Column="3"/>
+
+        <StackPanel Grid.Row="2" Grid.Column="3" Margin="0,35,0,0">
             <Label Content="Imię:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Nazwisko:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Grid.Column="4">
+        <StackPanel Grid.Row="2" Grid.Column="4" Margin="0,35,0,0">
             <TextBox x:Name="noweImieTextBox" Height="26" Margin="5,5,5,0" VerticalAlignment="Center"/>
             <TextBox x:Name="noweNazwiskoTextBox" Height="26" Margin="5,5,5,0" VerticalAlignment="Center"/>
-            <Button x:Name="pracowikAdd" Click="pracowikAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26" Width="155" HorizontalAlignment="Left"/>
+            <Button x:Name="pracowikAdd" Click="pracowikAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26" Width="155" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 

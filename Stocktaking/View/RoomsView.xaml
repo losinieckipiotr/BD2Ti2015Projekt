@@ -42,7 +42,7 @@
 
         <GridSplitter Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Stretch" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Height="1" VerticalAlignment="Center"/>
 
-        <Label Content="Zmień dane sali:" Grid.Row="2" Margin="5,5,0,0"/>
+        <Label Content="Zmień dane sali:" Grid.Row="2" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
         
         <StackPanel Grid.Row="3" Margin="0,35,0,0">
             <Label Content="Numer:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
@@ -59,11 +59,11 @@
         </StackPanel>
 
         <StackPanel Grid.Column="2" Grid.Row="2" Margin="0,35,0,0">
-            <Button x:Name="RoomUpdate" Content="Aktualizuj" Click="RoomUpdate_Click" Height="26" Margin="5,5,0,0" VerticalAlignment="Center"/>
+            <Button x:Name="RoomUpdate" Content="Zmień" Click="RoomUpdate_Click" Height="26" Margin="5,5,0,0" VerticalAlignment="Center"/>
             <Button x:Name="RoomDelete" Click="RoomDelete_Click" Content="Usuń" Margin="5,5,0,0" Height="26" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <Label Content="Dodaj nową salę:" Grid.Column="3" Grid.Row="2" Margin="5,5,0,0"/>
+        <Label Content="Dodaj nową salę:" Grid.Column="3" Grid.Row="2" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
         
         <StackPanel Grid.Column="3" Grid.Row="2" Margin="0,35,0,0" >
             <Label Content="Numer:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
