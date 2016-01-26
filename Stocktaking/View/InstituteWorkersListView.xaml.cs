@@ -126,11 +126,11 @@ namespace Stocktaking.View
                  if (!ViewLogic.Potwierdz("Czy chcesz dodać pracownika?"))
                     return;
                 
-                string noweImie = imieTextBox.Text;
-                string noweNazwisko = nazwiskoTextBox.Text;
+                string noweImie = noweImieTextBox.Text;
+                string noweNazwisko = noweNazwiskoTextBox.Text;
                 if (noweImie == "" || noweNazwisko == "")
                 {
-                    ViewLogic.Blad("Nie imienia lub nazwiska!");
+                    ViewLogic.Blad("Nie podano imienia lub nazwiska!");
                     return;
                 }
 
@@ -152,6 +152,8 @@ namespace Stocktaking.View
                 db.pracownik.Add(nowy);
                 db.SaveChanges();
 
+                noweImieTextBox.Clear();
+                noweNazwiskoTextBox.Clear();
                 OdswiezPracownikow();
             }
             catch (Exception)

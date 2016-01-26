@@ -255,13 +255,9 @@ namespace Stocktaking.View
         {
             try
             {
-                UserRecord r = (UserRecord)userRecordDataGrid.SelectedItem;
-                konto k = r.konto;
-
+                konto k = ((UserRecord)userRecordDataGrid.SelectedItem).konto;
                 if (k != null)
-                {
-                    typKontaComboBox.SelectedItem = (konto_typ)k.konto_typ;
-                }
+                    typKontaComboBox.SelectedItem = k.konto_typ;
             }
             catch (Exception)
             {

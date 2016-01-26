@@ -15,10 +15,10 @@
     
     <Grid DataContext="{StaticResource sprzet_typViewSource}" Margin="5" Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*" MinWidth="180"/>
+            <ColumnDefinition Width="*" MinWidth="50"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -26,17 +26,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <StackPanel>
-            <Label Content="Lista typów sprzętu:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
-            <DataGrid x:Name="sprzet_typDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True" Margin="5">
+        <Label Content="Lista typów sprzętu:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0"/>
+        <DataGrid x:Name="sprzet_typDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True" Margin="5,35,5,5">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="idColumn" Binding="{Binding id}" Header="Id" Width="30"/>
                 <DataGridTextColumn x:Name="typ_sprzetuColumn" Binding="{Binding typ_sprzetu}" Header="Typ sprzetu" Width="*"/>
             </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+        </DataGrid>
 
-        <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Width="1" />
         
         <StackPanel Grid.Column="2">
             <Label Content="Typ:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
@@ -54,16 +52,14 @@
             <Button x:Name="usunTypButton" Width="120" Height="26" Margin="5,5,5,0" HorizontalAlignment="Center" Click="usunTypButton_Click">Usuń typ</Button>
         </StackPanel>
         
-        <StackPanel Grid.Row="1">
-            <Label Content="Lista typów sal:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0"/>
-            <DataGrid x:Name="sala_typDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource sala_typViewSource}}" Margin="5" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="idColumn1" Binding="{Binding id}" Header="Id" Width="30"/>
-                    <DataGridTextColumn x:Name="typ_saliColumn" Binding="{Binding typ_sali}" Header="Typ sali" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
-        
+        <Label Grid.Row="1" Content="Lista typów sal:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0"/>
+        <DataGrid x:Name="sala_typDataGrid" Grid.Row="1" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource sala_typViewSource}}" Margin="5,35,5,5" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="idColumn1" Binding="{Binding id}" Header="Id" Width="30"/>
+                <DataGridTextColumn x:Name="typ_saliColumn" Binding="{Binding typ_sali}" Header="Typ sali" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
         <StackPanel Grid.Column="2" Grid.Row="1">
             <Label Content="Typ:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Center"/>
             <Label Content="Nowy typ:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Center"/>
