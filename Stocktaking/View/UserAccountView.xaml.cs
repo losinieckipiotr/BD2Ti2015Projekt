@@ -60,16 +60,10 @@ namespace Stocktaking.View
                 if (db == null || loadUI == false)
                     return;
 
-                //asynchroniczne operacje na bazie danych/////////////////////////////////////////////////
-                await db.konto.LoadAsync();
-                await db.konto_typ.LoadAsync();
-                List<pracownik> pr = await db.pracownik.Where(p => p.konto.Count == 0).ToListAsync();
-                //////////////////////////////////////////////////////////////////////////////////////////
-
                 System.Windows.Data.CollectionViewSource userRecordViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
-                //db.konto.Load();
                 List<UserRecord> rekordy = new List<UserRecord>();
+                await db.konto.LoadAsync();//operacja asynchroniczna
                 List<konto> konta = db.konto.Local.ToList();
                 foreach (konto k in konta)
                 {
@@ -79,15 +73,14 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource konto_typViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("konto_typViewSource")));
-                //db.konto_typ.Load();
+                await db.konto_typ.LoadAsync();//operacja asynchroniczna
                 konto_typViewSource.Source = db.konto_typ.Local.ToBindingList().OrderBy(t => t.id);
 
                 typComboBox.ItemsSource = db.konto_typ.Local.ToList().OrderBy(t => t.id);
 
                 System.Windows.Data.CollectionViewSource pracownikViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
-                //List<pracownik> pr = db.pracownik.Where(p => p.konto.Count == 0).ToList();
-                pracownikViewSource.Source = pr;
+                pracownikViewSource.Source = await db.pracownik.Where(p => p.konto.Count == 0).ToListAsync();//operacja asnychroniczna
 
                 loadUI = false;
             }
@@ -98,7 +91,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void loginButton_Click(object sender, RoutedEventArgs e)
+        private async void loginButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -109,9 +102,9 @@ namespace Stocktaking.View
 
                 k.login = zaznaczonyLoginTextBox.Text;
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
-                OdswiezKonta();
+                OdswiezKontaAsync();
             }
             catch (Exception)
             {
@@ -119,7 +112,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void usunButton_Click(object sender, RoutedEventArgs e)
+        private async void usunButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -129,10 +122,13 @@ namespace Stocktaking.View
                 konto k = ((UserRecord)userRecordDataGrid.SelectedItem).konto;
 
                 db.konto.Remove(k);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
+                //OdswiezKonta();
+                //OdswiezPracownikow();
+                //OdswiezKontaAsync();
                 OdswiezKonta();
-                OdswiezPracownikow();
+                OdswiezPracownikowAsync();
             }
             catch (Exception)
             {
@@ -141,7 +137,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void typButton_Click(object sender, RoutedEventArgs e)
+        private async void typButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -153,9 +149,10 @@ namespace Stocktaking.View
                 konto_typ wybranyTyp = (konto_typ)typKontaComboBox.SelectedItem;
                 k.konto_typ = wybranyTyp;
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
-                OdswiezKonta();
+                //OdswiezKonta();
+                OdswiezKontaAsync();
             }
             catch (Exception)
             {
@@ -163,14 +160,14 @@ namespace Stocktaking.View
             }
         }
 
-        private void hasloButton_Click(object sender, RoutedEventArgs e)
+        private async void hasloButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 konto k = ((UserRecord)userRecordDataGrid.SelectedItem).konto;
                 new UserAccountViewSubWindows.ChangePassword(k).ShowDialog();
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (Exception)
             {
@@ -179,7 +176,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void dodajButton_Click(object sender, RoutedEventArgs e)
+        private async void dodajButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -194,7 +191,15 @@ namespace Stocktaking.View
                     powtorzPassBox.Clear();
                     return;
                 }
-                bool loginZajety = db.konto.Any(k => k.login == nowyLogin);
+                bool loginZajety = await db.konto.AnyAsync(k => k.login == nowyLogin);
+                if (loginZajety)
+                {
+                    ViewLogic.Blad("Isnieje już użytkownik o podanym loginie!");
+                    hasloPassBox.Clear();
+                    powtorzPassBox.Clear();
+                    return;
+                }
+
                 string haslo = hasloPassBox.Password;
                 string haslo2 = powtorzPassBox.Password;
                 if (haslo != haslo2)
@@ -204,16 +209,11 @@ namespace Stocktaking.View
                     powtorzPassBox.Clear();
                     return;
                 }
-                if (loginZajety)
-                {
-                    ViewLogic.Blad("Isnieje już użytkownik o podanym loginie!");
-                    hasloPassBox.Clear();
-                    powtorzPassBox.Clear();
-                    return;
-                }
+
                 byte[] sha = ViewLogic.ObliczSHA(haslo);
 
                 int noweId = 1;
+                await db.konto.LoadAsync();
                 foreach (konto k in db.konto.Local.OrderBy(k => k.id))
                 {
                     if (noweId != k.id)
@@ -236,14 +236,16 @@ namespace Stocktaking.View
                     konto_typ_id = nowyTyp.id
                 };
                 db.konto.Add(nowy);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 nowyLoginTextBox.Clear();
                 hasloPassBox.Clear();
                 powtorzPassBox.Clear();
                 typComboBox.SelectedItem = null;
                 OdswiezKonta();
-                OdswiezPracownikow();
+                //OdswiezPracownikow();
+                //OdswiezKontaAsync();
+                OdswiezPracownikowAsync();
             }
             catch (Exception)
             {
@@ -280,12 +282,32 @@ namespace Stocktaking.View
             userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
         }
 
+        private async void OdswiezKontaAsync()
+        {
+            System.Windows.Data.CollectionViewSource userRecordViewSource =
+                       ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
+            await db.konto.LoadAsync();
+            List<konto> konta = db.konto.Local.ToList();
+            List<UserRecord> rekordy = new List<UserRecord>();
+            foreach (konto k in konta)
+            {
+                rekordy.Add(new UserRecord(k));
+            }
+            userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
+        }
+
         private void OdswiezPracownikow()
         {
             System.Windows.Data.CollectionViewSource pracownikViewSource =
                 ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
-            List<pracownik> pr = db.pracownik.Where(p => p.konto.Count == 0).ToList();
-            pracownikViewSource.Source = pr;
+            pracownikViewSource.Source = db.pracownik.Where(p => p.konto.Count == 0).ToList();
+        }
+
+        private async void OdswiezPracownikowAsync()
+        {
+            System.Windows.Data.CollectionViewSource pracownikViewSource =
+                ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
+            pracownikViewSource.Source = await db.pracownik.Where(p => p.konto.Count == 0).ToListAsync();
         }
     }
 }

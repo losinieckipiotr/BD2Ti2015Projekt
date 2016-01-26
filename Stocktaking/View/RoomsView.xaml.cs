@@ -57,7 +57,7 @@ namespace Stocktaking.View
             InitializeComponent();
         }
 
-        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource roomRecordViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
-                db.sala.Load();
+                await db.sala.LoadAsync();
                 List<sala> sale = db.sala.Local.ToList();
                 List<RoomRecord> rekordy = new List<RoomRecord>();
                 foreach (sala s in sale)
@@ -80,14 +80,14 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource sala_typViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["sala_typViewSource"];
-                db.sala_typ.Load();
+                await db.sala_typ.LoadAsync();
                 sala_typViewSource.Source = db.sala_typ.Local.ToBindingList();
 
                 newRoomType.ItemsSource = db.sala_typ.Local.ToBindingList().OrderBy(t => t.id);
 
                 System.Windows.Data.CollectionViewSource zakladViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
-                db.zaklad.Load();
+                await db.zaklad.LoadAsync();
                 zakladViewSource.Source = db.zaklad.Local.ToBindingList();
 
                 loadUI = false;

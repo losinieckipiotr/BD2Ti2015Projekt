@@ -65,7 +65,7 @@ namespace Stocktaking.View
             InitializeComponent();
         }
 
-        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource workerRecordViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("workerRecordViewSource")));
-                db.pracownik.Load();
+                await db.pracownik.LoadAsync();
                 List<pracownik> pracownicy = db.pracownik.Local.ToList();
                 List<WorkerRecord> rekordy = new List<WorkerRecord>();
                 foreach (pracownik p in pracownicy)

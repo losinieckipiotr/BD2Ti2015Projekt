@@ -34,7 +34,7 @@ namespace Stocktaking.View
             InitializeComponent();
         }
 
-        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
             {
@@ -44,14 +44,16 @@ namespace Stocktaking.View
                 if (db == null || loadUI == false)
                     return;
 
+                
                 System.Windows.Data.CollectionViewSource sprzet_typViewSource =
                    ((System.Windows.Data.CollectionViewSource)(this.FindResource("sprzet_typViewSource")));
-                db.sprzet_typ.Load();
+                await db.sprzet_typ.LoadAsync();//operacja asynchroniczna
                 sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList().OrderBy(t => t.id);
 
+                
                 System.Windows.Data.CollectionViewSource sala_typViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("sala_typViewSource")));
-                db.sala_typ.Load();
+                await db.sala_typ.LoadAsync();//operacja asynchroniczna
                 sala_typViewSource.Source = db.sala_typ.Local.ToBindingList().OrderBy(s => s.id);
 
                 loadUI = false;
@@ -63,7 +65,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void typButton_Click(object sender, RoutedEventArgs e)
+        private async void typButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -73,7 +75,7 @@ namespace Stocktaking.View
                 sprzet_typ typ = (sprzet_typ)sprzet_typDataGrid.SelectedItem;
                 typ.typ_sprzetu = typTextBox.Text;
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezSprzet();
             }
@@ -84,7 +86,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void nowyTypButton_Click(object sender, RoutedEventArgs e)
+        private async void nowyTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -97,7 +99,7 @@ namespace Stocktaking.View
                     ViewLogic.Blad("Nie podano nazwy typu!");
                     return;
                 }
-                bool typZajety = db.sprzet_typ.Any(t => t.typ_sprzetu == nowyTyp);
+                bool typZajety = await db.sprzet_typ.AnyAsync(t => t.typ_sprzetu == nowyTyp);
                 if (typZajety)
                 {
                     ViewLogic.Blad("Isnieje już typ o tej nazwie!");
@@ -105,6 +107,7 @@ namespace Stocktaking.View
                 }
 
                 int noweId = 1;
+                await db.sprzet_typ.LoadAsync();
                 foreach (sprzet_typ t in db.sprzet_typ.Local.OrderBy(t => t.id))
                 {
                     if (noweId != t.id)
@@ -119,7 +122,7 @@ namespace Stocktaking.View
                     typ_sprzetu = nowyTyp
                 };
                 db.sprzet_typ.Add(typ);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 nowyTypTextBox.Clear();
                 OdswiezSprzet();
@@ -131,7 +134,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void usunTypButton_Click(object sender, RoutedEventArgs e)
+        private async void usunTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -147,7 +150,7 @@ namespace Stocktaking.View
                 }
 
                 db.sprzet_typ.Remove(typ);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezSprzet();
             }
@@ -158,7 +161,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void salaTypButton_Click(object sender, RoutedEventArgs e)
+        private async void salaTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -168,7 +171,7 @@ namespace Stocktaking.View
                 sala_typ typ = (sala_typ)sala_typDataGrid.SelectedItem;
                 typ.typ_sali = salaTypTextBox.Text;
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezSale();
             }
@@ -179,7 +182,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void salaNowyTypButton_Click(object sender, RoutedEventArgs e)
+        private async void salaNowyTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -192,7 +195,7 @@ namespace Stocktaking.View
                     ViewLogic.Blad("Nie podano nazwy typu!");
                     return;
                 }
-                bool typZajety = db.sala_typ.Any(t => t.typ_sali == nowyTyp);
+                bool typZajety = await db.sala_typ.AnyAsync(t => t.typ_sali == nowyTyp);
                 if (typZajety)
                 {
                     ViewLogic.Blad("Isnieje już typ o tej nazwie!");
@@ -200,6 +203,7 @@ namespace Stocktaking.View
                 }
 
                 int noweId = 1;
+                await db.sala_typ.LoadAsync();
                 foreach (sala_typ s in db.sala_typ.Local.OrderBy(s => s.id))
                 {
                     if (noweId != s.id)
