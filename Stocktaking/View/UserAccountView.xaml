@@ -37,7 +37,9 @@
 
         <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Width="1"/>
 
-        <StackPanel Grid.Column="2">
+        <Label Content="Szczegóły konta:" Grid.Column="2" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
+
+        <StackPanel Grid.Column="2" Margin="0,35,0,0">
             <Label Content="Login:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Imię:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Nazwisko:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
@@ -46,7 +48,7 @@
             <Label Content="Zakład:" HorizontalAlignment="Left" Margin="5,5,0,0"  VerticalAlignment="Top"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="3" DataContext="{StaticResource userRecordViewSource}">
+        <StackPanel Grid.Column="3" DataContext="{StaticResource userRecordViewSource}" Margin="0,35,0,0">
             <TextBox x:Name="zaznaczonyLoginTextBox" Text="{Binding login, Mode=OneWay, NotifyOnTargetUpdated=False, NotifyOnSourceUpdated=False, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" Height="26" Margin="5,5,5,0"/>
             <TextBox x:Name="imieTextBox" Text="{Binding konto.pracownik.imie, Mode=OneWay, NotifyOnSourceUpdated=True, ValidatesOnDataErrors=True}" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" IsReadOnly="True" Height="26" Margin="5,5,5,0"/>
             <TextBox x:Name="nazwiskoTextBox" Height="26" Text="{Binding konto.pracownik.nazwisko, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" IsReadOnly="True" Margin="5,5,5,0"/>
@@ -55,30 +57,32 @@
             <TextBox x:Name="zakladTextBox" HorizontalAlignment="Stretch" Height="48" Margin="5,5,5,0" Text="{Binding konto.pracownik.sala.zaklad.nazwa, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" TextWrapping="Wrap"  IsReadOnly="True"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="4">
+        <StackPanel Grid.Column="4" Margin="0,35,0,0">
             <Button x:Name="loginButton" Width="120" Height="26" Margin="5,5,5,0" Click="loginButton_Click" HorizontalAlignment="Center" Content="Zmień login"/>
             <Button x:Name="usunButton" Width="120" Height="26" Margin="5,5,5,0" Click="usunButton_Click" HorizontalAlignment="Center" Content="Usuń konto"/>
             <Button x:Name="typButton" Width="120" Height="26" Margin="5,5,5,0" Click="typButton_Click" HorizontalAlignment="Center" Content="Zmien typ konta"/>
             <Button x:Name="hasloButton" Width="120" Height="26" Margin="5,5,5,0" Click="hasloButton_Click" HorizontalAlignment="Center" Content="Zmień hasło"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="2" Grid.Row="1">
+        <Label Content="Dodaj nowe konto:" Grid.Column="2" Grid.Row="1" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
+
+        <StackPanel Grid.Column="2" Grid.Row="1" Margin="0,35,0,0">
             <Label Content="Login:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Hasło:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Powtórz hasło:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Typ konta:" HorizontalAlignment="Left" Margin="5,5,0,0"  VerticalAlignment="Top"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="3" Grid.Row="1">
+        <StackPanel Grid.Column="3" Grid.Row="1" Margin="0,35,0,0">
             <TextBox x:Name="nowyLoginTextBox" Margin="5,5,5,0" Grid.Row="0" VerticalAlignment="Center" Height="26"/>
             <PasswordBox x:Name="hasloPassBox" Margin="5,5,5,0" VerticalAlignment="Center" Height="26"/>
             <PasswordBox x:Name="powtorzPassBox" Margin="5,5,5,0" VerticalAlignment="Center" Height="26"/>
             <ComboBox x:Name="typComboBox" Margin="5,5,5,0" DisplayMemberPath="nazwa" VerticalAlignment="Center" Height="26"/>
         </StackPanel>
 
-        <Button x:Name="dodajButton2" Grid.Column="4" Grid.Row="1"  Width="120" Margin="5,5,5,0" Click="dodajButton_Click" Height="26" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Dodaj konto"/>
+        <Button x:Name="dodajButton2" Grid.Column="4" Grid.Row="1"  Width="120" Margin="5,40,5,0" Click="dodajButton_Click" Height="26" HorizontalAlignment="Center" VerticalAlignment="Top" Content="Dodaj konto"/>
 
-        <Label Grid.Row="1" Content="Wybierz pracownika bay dodać konto:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0"/>
+        <Label Grid.Row="1" Content="Pracownicy bez konta:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0"/>
         <DataGrid x:Name="pracownikDataGrid" Grid.Row="1" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource pracownikViewSource}}" Margin="5,35,5,5" RowDetailsVisibilityMode="VisibleWhenSelected" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="pracIdColum" Binding="{Binding id}" Header="Id" Width="40"/>
