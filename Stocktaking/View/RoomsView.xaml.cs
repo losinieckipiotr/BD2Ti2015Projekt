@@ -29,7 +29,7 @@ namespace Stocktaking.View
         public int pojemnosc { get; set; }
         public string typSali { get; set; }
         public string zaklad { get; set; }
-        public sala s { get; set; }
+        public sala sala { get; set; }
 
         public RoomRecord(sala s)
         {
@@ -41,7 +41,7 @@ namespace Stocktaking.View
                 this.zaklad = s.zaklad.nazwa;
             else
                 this.zaklad = "Sala Międzyzakładowa";
-            this.s = s;
+            this.sala = s;
         }
     }
 
@@ -83,6 +83,8 @@ namespace Stocktaking.View
                 db.sala_typ.Load();
                 sala_typViewSource.Source = db.sala_typ.Local.ToBindingList();
 
+                newRoomType.ItemsSource = db.sala_typ.Local.ToBindingList().OrderBy(t => t.id);
+
                 System.Windows.Data.CollectionViewSource zakladViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
                 db.zaklad.Load();
@@ -105,6 +107,21 @@ namespace Stocktaking.View
             }
         }
 
+        private void salaDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                sala s = ((RoomRecord)salaDataGrid.SelectedItem).sala;
+                if (s != null)
+                    RoomType.SelectedItem = s.sala_typ;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
+
         private void RoomUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -123,10 +140,10 @@ namespace Stocktaking.View
                         ViewLogic.Blad("Isnieje już sala o podanym numerze!");
                         return;
                     }
-                    r.s.numer = nowyNumer;
+                    r.sala.numer = nowyNumer;
                 }
-                r.s.pojemnosc = Convert.ToInt32(RoomCapacity.Text);
-                r.s.sala_typ = st;
+                r.sala.pojemnosc = Convert.ToInt32(RoomCapacity.Text);
+                r.sala.sala_typ = st;
 
                 db.SaveChanges();
 
@@ -145,8 +162,8 @@ namespace Stocktaking.View
                 if (!ViewLogic.Potwierdz("Czy chcesz dodać salę?"))
                     return;
 
-                string nowyNumerS = RoomNumber.Text;
-                string nowaPojemnoscS = RoomCapacity.Text;
+                string nowyNumerS = newRoomNumber.Text;
+                string nowaPojemnoscS = newRoomCapacity.Text;
                 if (nowyNumerS == "")
                 {
                     ViewLogic.Blad("Nie podano numeru!");
@@ -176,7 +193,7 @@ namespace Stocktaking.View
                         ++noweId;
                 }
 
-                sala_typ nowyTyp = (sala_typ)RoomType.SelectedItem;
+                sala_typ nowyTyp = (sala_typ)newRoomType.SelectedItem;
 
                 sala nowy = new sala
                 {
@@ -189,6 +206,9 @@ namespace Stocktaking.View
                 db.sala.Add(nowy);
                 db.SaveChanges();
 
+                newRoomCapacity.Clear();
+                newRoomNumber.Clear();
+                newRoomType.SelectedItem = null;
                 OdswiezSale();
             }
             catch (Exception)
@@ -206,7 +226,7 @@ namespace Stocktaking.View
 
                 RoomRecord r = (RoomRecord)salaDataGrid.SelectedItem;
 
-                db.sala.Remove(r.s);
+                db.sala.Remove(r.sala);
                 db.SaveChanges();
 
                 OdswiezSale();

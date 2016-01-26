@@ -16,46 +16,66 @@
 
     <Grid Background="White" DataContext="{StaticResource roomRecordViewSource}">
         <Grid.RowDefinitions>
-            <RowDefinition MinHeight="300"/>
-            <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="175"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="185"/>
+            <ColumnDefinition Width="185"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="190"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Label Content="Lista sal:" Margin="0,5,0,0"/>
-        <DataGrid x:Name="salaDataGrid" EnableRowVirtualization="True" Margin="5,35,5,5" Grid.ColumnSpan="3" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid x:Name="salaDataGrid" EnableRowVirtualization="True" Margin="5,35,5,5" Grid.ColumnSpan="6" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True" SelectionChanged="salaDataGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="salaIdColumn" Binding="{Binding id}" Header="Id" Width="30" MinWidth="30"/>
-                <DataGridTextColumn x:Name="salaNumerColumn" Binding="{Binding numer}" Header="Numer" Width="SizeToHeader"/>
+                <DataGridTextColumn x:Name="salaNumerColumn" Binding="{Binding numer}" Header="Numer" Width="Auto"/>
                 <DataGridTextColumn x:Name="salaTypColumn" Binding="{Binding typSali}" Header="Typ sali" MinWidth="40" Width="Auto"/>
                 <DataGridTextColumn x:Name="salaPojemnoscColumn" Binding="{Binding pojemnosc}" Header="Pojemność" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="salaZakladColumn" Header="Zakład" MinWidth="90" Binding="{Binding zaklad}"/>
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="1">
-            <Label Content="Id:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+        <GridSplitter Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" HorizontalAlignment="Stretch" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Height="1" VerticalAlignment="Center"/>
+
+        <Label Content="Zmień dane sali:" Grid.Row="2" Margin="5,5,0,0"/>
+        
+        <StackPanel Grid.Row="3" Margin="0,35,0,0">
             <Label Content="Numer:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Pojemność:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Rodzaj sali:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
             <Label Content="Zakład:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Grid.Row="1">
-            <Label FontWeight="Bold" x:Name="RoomId" Content="{Binding id, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" Margin="5,5,5,0" Height="26" VerticalAlignment="Center"/>
+        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,35,0,0">
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomNumber" Text="{Binding numer, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" Height="26" VerticalAlignment="Center"/>
             <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="RoomCapacity" Text="{Binding pojemnosc, Mode=OneWay, NotifyOnSourceUpdated=False, NotifyOnTargetUpdated=False, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" Height="26" />
             <ComboBox Margin="5,5,5,0" x:Name="RoomType" ItemsSource="{Binding Source={StaticResource sala_typViewSource}}" DisplayMemberPath="typ_sali" Height="26" VerticalAlignment="Center"/>
             <TextBox x:Name="zakladTextBox" HorizontalAlignment="Stretch" Height="48" Margin="5" Background="Transparent" BorderThickness="0" TextWrapping="Wrap" IsReadOnly="True" Text="{Binding zaklad, Mode=OneWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="2" >
-            <Button x:Name="RoomUpdate" Content="Aktualizuj" Click="RoomUpdate_Click" Height="26" Margin="5,5,5,0" Width="170" HorizontalAlignment="Left"/>
-            <Button x:Name="RoomAdd" Click="RoomAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26" Width="170" HorizontalAlignment="Left"/>
-            <Button x:Name="RoomDelete" Click="RoomDelete_Click" Content="Usuń" Margin="5,5,5,0" Height="26" Width="170" HorizontalAlignment="Left"/>
+        <StackPanel Grid.Column="2" Grid.Row="2" Margin="0,35,0,0">
+            <Button x:Name="RoomUpdate" Content="Aktualizuj" Click="RoomUpdate_Click" Height="26" Margin="5,5,0,0" VerticalAlignment="Center"/>
+            <Button x:Name="RoomDelete" Click="RoomDelete_Click" Content="Usuń" Margin="5,5,0,0" Height="26" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <Label Content="Dodaj nową salę:" Grid.Column="3" Grid.Row="2" Margin="5,5,0,0"/>
+        
+        <StackPanel Grid.Column="3" Grid.Row="2" Margin="0,35,0,0" >
+            <Label Content="Numer:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Pojemność:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Rodzaj sali:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="4" Grid.Row="2" Margin="0,35,0,0">
+            <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="newRoomNumber" Height="26" VerticalAlignment="Center"/>
+            <TextBox Margin="5,5,5,0" PreviewTextInput="Number_PreviewTextInput" x:Name="newRoomCapacity" Height="26" VerticalAlignment="Center" />
+            <ComboBox Margin="5,5,5,0" x:Name="newRoomType" DisplayMemberPath="typ_sali" Height="26" VerticalAlignment="Center"/>
+            <Button x:Name="RoomAdd" Click="RoomAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26" VerticalAlignment="Center"/>
         </StackPanel>
 
     </Grid>
