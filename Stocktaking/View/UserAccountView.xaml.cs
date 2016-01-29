@@ -104,7 +104,7 @@ namespace Stocktaking.View
 
                 await db.SaveChangesAsync();
 
-                OdswiezKontaAsync();
+                OdswiezKonta();
             }
             catch (Exception)
             {
@@ -124,11 +124,20 @@ namespace Stocktaking.View
                 db.konto.Remove(k);
                 await db.SaveChangesAsync();
 
-                //OdswiezKonta();
-                //OdswiezPracownikow();
-                //OdswiezKontaAsync();
-                OdswiezKonta();
-                OdswiezPracownikowAsync();
+                System.Windows.Data.CollectionViewSource userRecordViewSource =
+                    ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
+                await db.konto.LoadAsync();
+                List<konto> konta = db.konto.Local.ToList();
+                List<UserRecord> rekordy = new List<UserRecord>();
+                foreach (konto kk in konta)
+                {
+                    rekordy.Add(new UserRecord(kk));
+                }
+                userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
+
+                System.Windows.Data.CollectionViewSource pracownikViewSource =
+                ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
+                pracownikViewSource.Source = await db.pracownik.Where(p => p.konto.Count == 0).ToListAsync();
             }
             catch (Exception)
             {
@@ -151,8 +160,7 @@ namespace Stocktaking.View
 
                 await db.SaveChangesAsync();
 
-                //OdswiezKonta();
-                OdswiezKontaAsync();
+                OdswiezKonta();
             }
             catch (Exception)
             {
@@ -242,10 +250,21 @@ namespace Stocktaking.View
                 hasloPassBox.Clear();
                 powtorzPassBox.Clear();
                 typComboBox.SelectedItem = null;
-                OdswiezKonta();
-                //OdswiezPracownikow();
-                //OdswiezKontaAsync();
-                OdswiezPracownikowAsync();
+
+                System.Windows.Data.CollectionViewSource userRecordViewSource =
+                       ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
+                await db.konto.LoadAsync();
+                List<konto> konta = db.konto.Local.ToList();
+                List<UserRecord> rekordy = new List<UserRecord>();
+                foreach (konto k in konta)
+                {
+                    rekordy.Add(new UserRecord(k));
+                }
+                userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
+
+                System.Windows.Data.CollectionViewSource pracownikViewSource =
+                ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
+                pracownikViewSource.Source = await db.pracownik.Where(pp => pp.konto.Count == 0).ToListAsync();
             }
             catch (Exception)
             {
@@ -268,21 +287,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void OdswiezKonta()
-        {
-            System.Windows.Data.CollectionViewSource userRecordViewSource =
-                       ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
-            db.konto.Load();
-            List<konto> konta = db.konto.Local.ToList();
-            List<UserRecord> rekordy = new List<UserRecord>();
-            foreach (konto k in konta)
-            {
-                rekordy.Add(new UserRecord(k));
-            }
-            userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
-        }
-
-        private async void OdswiezKontaAsync()
+        private async void OdswiezKonta()
         {
             System.Windows.Data.CollectionViewSource userRecordViewSource =
                        ((System.Windows.Data.CollectionViewSource)(this.FindResource("userRecordViewSource")));
@@ -296,14 +301,7 @@ namespace Stocktaking.View
             userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
         }
 
-        private void OdswiezPracownikow()
-        {
-            System.Windows.Data.CollectionViewSource pracownikViewSource =
-                ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));
-            pracownikViewSource.Source = db.pracownik.Where(p => p.konto.Count == 0).ToList();
-        }
-
-        private async void OdswiezPracownikowAsync()
+        private async void OdswiezPracownikow()
         {
             System.Windows.Data.CollectionViewSource pracownikViewSource =
                 ((System.Windows.Data.CollectionViewSource)(this.FindResource("pracownikViewSource")));

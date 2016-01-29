@@ -43,13 +43,11 @@ namespace Stocktaking.View
                 db = ViewLogic.dbContext;
                 if (db == null || loadUI == false)
                     return;
-
                 
                 System.Windows.Data.CollectionViewSource sprzet_typViewSource =
                    ((System.Windows.Data.CollectionViewSource)(this.FindResource("sprzet_typViewSource")));
                 await db.sprzet_typ.LoadAsync();//operacja asynchroniczna
                 sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList().OrderBy(t => t.id);
-
                 
                 System.Windows.Data.CollectionViewSource sala_typViewSource =
                     ((System.Windows.Data.CollectionViewSource)(this.FindResource("sala_typViewSource")));
@@ -230,7 +228,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void salaUsunTypButton_Click(object sender, RoutedEventArgs e)
+        private async void salaUsunTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -246,7 +244,7 @@ namespace Stocktaking.View
                 }
 
                 db.sala_typ.Remove(sala);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezSale();
             }
@@ -257,17 +255,19 @@ namespace Stocktaking.View
             }
         }
 
-        private void OdswiezSprzet()
+        private async void OdswiezSprzet()
         {
             System.Windows.Data.CollectionViewSource sprzet_typViewSource =
                 ((System.Windows.Data.CollectionViewSource)(this.FindResource("sprzet_typViewSource")));
+            await db.sprzet_typ.LoadAsync();
             sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList().OrderBy(t => t.id);
         }
 
-        private void OdswiezSale()
+        private async void OdswiezSale()
         {
             System.Windows.Data.CollectionViewSource sala_typViewSource =
                 ((System.Windows.Data.CollectionViewSource)(this.FindResource("sala_typViewSource")));
+            await db.sala_typ.LoadAsync();
             sala_typViewSource.Source = db.sala_typ.Local.ToBindingList().OrderBy(s => s.id);
         }
     }
