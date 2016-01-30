@@ -24,11 +24,12 @@ namespace Stocktaking.View
     /// </summary>
     using RaportsViewSubWindows;
     using ViewModel;
+    using Data;
     public partial class RaportsView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
         private konto userAcc = null;
-        private bool loadUI = false;
+        private bool loadUI = true;
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
@@ -50,7 +51,7 @@ namespace Stocktaking.View
                 if (db == null || loadUI == false)
                     return;
 
-                userAcc = StocktakingViewModel.Stocktaking.GetUser;
+                userAcc = StocktakingViewModel.Stocktaking.User;
 
                 if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))
                 {
@@ -315,7 +316,7 @@ namespace Stocktaking.View
         //zwraca dane o zakładzie w którym jest kierownik zakładu
         private dynamic getMyInstituteData()
         {
-            zaklad zak = StocktakingViewModel.Stocktaking.GetZaklad;
+            zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
             var Institute = (from z in db.zaklad
                              where z.id == zak.id
                              select new
@@ -331,7 +332,7 @@ namespace Stocktaking.View
         // zwraca dane o salach w zakładzie
         private dynamic GetRoomInstitute()
         {
-            zaklad zak = StocktakingViewModel.Stocktaking.GetZaklad;
+            zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
             var Rooms = (from s in db.sala_typ
                          select new
                          {
@@ -356,7 +357,7 @@ namespace Stocktaking.View
         // zwraca dane o sprzecie w zakladzie 
         private dynamic GetDeviceInstitute()
         {
-            zaklad zak = StocktakingViewModel.Stocktaking.GetZaklad;
+            zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
 
             var Devices = (from d in db.sprzet_typ
                            select new

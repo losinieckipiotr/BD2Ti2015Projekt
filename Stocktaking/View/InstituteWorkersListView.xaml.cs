@@ -56,7 +56,7 @@ namespace Stocktaking.View
     public partial class InstituteWorkersListView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
-        private bool loadUI = false;
+        private bool loadUI = true;
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
@@ -95,7 +95,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void pracownikUpdate_Click(object sender, RoutedEventArgs e)
+        private async void pracownikUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace Stocktaking.View
                 p.imie = newName;
                 p.nazwisko = newSurname;
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezPracownikow();
             }
@@ -119,7 +119,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void pracowikAdd_Click(object sender, RoutedEventArgs e)
+        private async void pracowikAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -135,6 +135,7 @@ namespace Stocktaking.View
                 }
 
                 int noweId = 1;
+                await db.pracownik.LoadAsync();
                 foreach (pracownik p in db.pracownik.Local.OrderBy(p => p.id))
                 {
                     if (noweId != p.id)
@@ -150,7 +151,7 @@ namespace Stocktaking.View
                     nazwisko = noweNazwisko
                 };
                 db.pracownik.Add(nowy);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 noweImieTextBox.Clear();
                 noweNazwiskoTextBox.Clear();
@@ -163,7 +164,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void pracownikDelete_Click(object sender, RoutedEventArgs e)
+        private async void pracownikDelete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -173,7 +174,7 @@ namespace Stocktaking.View
                 pracownik p = ((WorkerRecord)workerRecordDataGrid.SelectedItem).pracownik;
 
                 db.pracownik.Remove(p);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezPracownikow();
             }
@@ -184,11 +185,11 @@ namespace Stocktaking.View
             }
         }
 
-        void OdswiezPracownikow()
+        private async void  OdswiezPracownikow()
         {
             System.Windows.Data.CollectionViewSource workerRecordViewSource =
                    ((System.Windows.Data.CollectionViewSource)(this.FindResource("workerRecordViewSource")));
-            db.pracownik.Load();
+            await db.pracownik.LoadAsync();
             List<pracownik> pracownicy = db.pracownik.Local.ToList();
             List<WorkerRecord> rekordy = new List<WorkerRecord>();
             foreach (pracownik p in pracownicy)
@@ -196,6 +197,9 @@ namespace Stocktaking.View
                 rekordy.Add(new WorkerRecord(p));
             }
             workerRecordViewSource.Source = rekordy.OrderBy(r => r.id);
+
+            StocktakingViewModel.Stocktaking.RealoadTabs(
+                        raportsTab: true);
         }
     }
 }

@@ -42,7 +42,7 @@
                 </TabItem>
                 <TabItem x:Name="InstituteDevicesManagment" Header="Sprzęt instytutu">
                     <Grid Background="#FFE5E5E5">
-                        <view:InstituteDevicesListView/>
+                        <view:InstituteDevicesListView x:Name="InstituteDevicesControl"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="InstituteWorkersManagment" Header="Pracownicy instytutu">

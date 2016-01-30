@@ -48,12 +48,14 @@ namespace Stocktaking.View
     {
         private StocktakingDatabaseEntities db = null;
         private bool loadUI = true;
+
         public InstituteDevicesListView()
         {
             InitializeComponent();
         }
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
+
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -210,6 +212,9 @@ namespace Stocktaking.View
                 rekordy.Add(new DeviceRecord(s));
             }
             deviceRecordViewSource.Source = rekordy.OrderBy(r => r.id);
+
+            StocktakingViewModel.Stocktaking.RealoadTabs(
+                        raportsTab: true);
         }
     }
 }

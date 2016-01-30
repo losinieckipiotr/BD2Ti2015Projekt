@@ -48,7 +48,7 @@ namespace Stocktaking.View
     public partial class Rooms : UserControl
     {
         private StocktakingDatabaseEntities db = null;
-        private bool loadUI = false;
+        private bool loadUI = true;
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
@@ -122,7 +122,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void RoomUpdate_Click(object sender, RoutedEventArgs e)
+        private async void RoomUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace Stocktaking.View
                 int nowyNumer = Convert.ToInt32(RoomNumber.Text);
                 if (r.numer != nowyNumer)
                 {
-                    bool numerZajety = db.sala.Any(s => s.numer == nowyNumer);
+                    bool numerZajety = await db.sala.AnyAsync(s => s.numer == nowyNumer);
                     if (numerZajety)
                     {
                         ViewLogic.Blad("Isnieje już sala o podanym numerze!");
@@ -145,7 +145,7 @@ namespace Stocktaking.View
                 r.sala.pojemnosc = Convert.ToInt32(RoomCapacity.Text);
                 r.sala.sala_typ = st;
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezSale();
             }
@@ -155,7 +155,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void RoomAdd_Click(object sender, RoutedEventArgs e)
+        private async void RoomAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace Stocktaking.View
                 int nowyNumer = Convert.ToInt32(nowyNumerS);
                 int nowaPojemnosc = Convert.ToInt32(nowaPojemnoscS);
 
-                bool numerZajety = db.sala.Any(s => s.numer == nowyNumer);
+                bool numerZajety = await db.sala.AnyAsync(s => s.numer == nowyNumer);
                 if (numerZajety)
                 {
                     ViewLogic.Blad("Isnieje już sala o podanym numerze!");
@@ -185,6 +185,7 @@ namespace Stocktaking.View
                 }
 
                 int noweId = 1;
+                await db.sala.LoadAsync();
                 foreach (sala s in db.sala.Local.OrderBy(s => s.id))
                 {
                     if (noweId != s.id)
@@ -204,7 +205,7 @@ namespace Stocktaking.View
                     sala_typ_id = nowyTyp.id,
                 };
                 db.sala.Add(nowy);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 newRoomCapacity.Clear();
                 newRoomNumber.Clear();
@@ -217,7 +218,7 @@ namespace Stocktaking.View
             }
         }
 
-        private void RoomDelete_Click(object sender, RoutedEventArgs e)
+        private async void RoomDelete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -227,7 +228,7 @@ namespace Stocktaking.View
                 RoomRecord r = (RoomRecord)salaDataGrid.SelectedItem;
 
                 db.sala.Remove(r.sala);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 OdswiezSale();
             }
@@ -238,11 +239,11 @@ namespace Stocktaking.View
             }
         }
 
-        private void OdswiezSale()
+        private async void OdswiezSale()
         {
             System.Windows.Data.CollectionViewSource roomRecordViewSource =
                 (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
-            db.sala.Load();
+            await db.sala.LoadAsync();
             List<sala> sale = db.sala.Local.ToList();
             List<RoomRecord> rekordy = new List<RoomRecord>();
             foreach (sala s in sale)
@@ -250,6 +251,9 @@ namespace Stocktaking.View
                 rekordy.Add(new RoomRecord(s));
             }
             roomRecordViewSource.Source = rekordy.OrderBy(r => r.id);
+
+            StocktakingViewModel.Stocktaking.RealoadTabs(
+                        raportsTab: true);
         }
     }
 }

@@ -18,28 +18,8 @@ namespace Stocktaking.ViewModel
 
         public static StocktakingViewModel Stocktaking { get { return stocktaking; } }
         public MainWindow Window { get { return win; } }
-        public konto GetUser { get { return userAcc; } }
+        public konto User { get { return userAcc; } }
         public bool IsUserLogged { get { return userAcc == null; } }
-
-        #region do instituteManagment:
-        //public int GetUserType { get { return userAcc.konto_typ_id; } }
-        //public int GetWorkerId { get { return userAcc.pracownik_id; } }
-        //public int GetAccId { get { return userAcc.id; } }
-        
-        public zaklad GetZaklad
-        {
-            get
-            {
-                //zaklad ans = db.zaklad.SingleOrDefault
-                //    (z => z.id == userAcc.pracownik.sala.zaklad_id);
-                //zwraca kierownika a nie pracownika
-                //return ans;
-
-                //prosciej
-                return userAcc.pracownik.sala.zaklad; 
-            }
-        }
-        #endregion
 
         public static void CreateStocktaking( MainWindow win)
         {
@@ -111,6 +91,24 @@ namespace Stocktaking.ViewModel
             initDbTask.Start();
         }
 
+        public void RealoadTabs(
+            bool dictionaryTab = false,
+            bool instituteDevicesTab = false,
+            bool instituteManagmentTab = false,
+            bool instituteWorkersTab = false,
+            bool raportsTab = false,
+            bool roomsTab = false,
+            bool userAccountTab = false)
+        {
+            win.DictionaryControl.LoadUI = dictionaryTab;
+            win.InstituteDevicesControl.LoadUI = instituteDevicesTab;
+            win.InstituteManagementControl.LoadUI = instituteManagmentTab;
+            win.InstituteWorkersControl.LoadUI = instituteWorkersTab;
+            win.RaportsControl.LoadUI = raportsTab;
+            win.RoomsControl.LoadUI = roomsTab;
+            win.UserAccountControl.LoadUI = userAccountTab;
+        }
+
         private void UpdataWindow()
         {
             switch (userAcc.konto_typ_id)//decyduje które zakładki mają zostać wyświetlone dla poszczególnych kont, 
@@ -166,17 +164,5 @@ namespace Stocktaking.ViewModel
                     break;
             }
         }
-
-        //Co to robi?? Po co to??
-        public void DeleteItemFromKonto(int id)
-        {
-            var itemToDelete = db.konto.SingleOrDefault(x => x.id == id);
-            if (itemToDelete != null)
-            {
-                db.konto.Remove(itemToDelete);
-                db.SaveChanges();
-            }
-        }
-
     }
 }

@@ -25,7 +25,7 @@ namespace Stocktaking.View
     public partial class DictionaryView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
-        private bool loadUI = false;
+        private bool loadUI = true;
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 

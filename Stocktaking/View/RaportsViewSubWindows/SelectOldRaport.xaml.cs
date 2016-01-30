@@ -21,6 +21,7 @@ namespace Stocktaking.View.RaportsViewSubWindows
     /// Interaction logic for SelectOldRaport.xaml
     /// </summary>
     using ViewModel;
+    using Data;
     public partial class SelectOldRaport : Window
     {
         private StocktakingDatabaseEntities myDb;
@@ -37,7 +38,7 @@ namespace Stocktaking.View.RaportsViewSubWindows
 
         private void RaportDatagrid_Loaded(object sender, RoutedEventArgs e)
         {
-            int Type = StocktakingViewModel.Stocktaking.GetUser.konto_typ_id;
+            int Type = StocktakingViewModel.Stocktaking.User.konto_typ_id;
             switch (Type)
             {
                 case 2://Dyrektor zakładu
@@ -59,7 +60,7 @@ namespace Stocktaking.View.RaportsViewSubWindows
 
         private void upDataMan()
         {
-            zaklad zak = StocktakingViewModel.Stocktaking.GetZaklad;
+            zaklad zak = DataFunctions.GetZaklad(StocktakingViewModel.Stocktaking.User.pracownik);
             var raports = myDb.raport.Where(r => r.konto.pracownik.id == zak.pracownik.id);
             RaportDatagrid.ItemsSource = raports.ToList();
         }

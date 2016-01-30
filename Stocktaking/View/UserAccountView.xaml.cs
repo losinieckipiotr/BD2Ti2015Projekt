@@ -41,7 +41,7 @@ namespace Stocktaking.View
     public partial class UserAccountView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
-        private bool loadUI = false;
+        private bool loadUI = true;
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
