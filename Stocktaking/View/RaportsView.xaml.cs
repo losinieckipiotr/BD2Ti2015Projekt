@@ -53,7 +53,7 @@ namespace Stocktaking.View
 
                 userAcc = StocktakingViewModel.Stocktaking.User;
 
-                if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))
+                if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))//kiedy program tutaj wchodzi?
                 {
                     if (Room.IsChecked == true)
                     {
