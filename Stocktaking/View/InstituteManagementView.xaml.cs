@@ -102,7 +102,7 @@ namespace Stocktaking.View
                 roomsTab: true);
         }
 
-        private void upDataManager()
+        private async void upDataManager()
         {
             zaklad selectedZaklad = getSelectionZaklad();
             if (selectedZaklad != null)
@@ -113,22 +113,22 @@ namespace Stocktaking.View
                 var workers = from o in db.pracownik
                               where o.sala.zaklad_id == selectedZaklad.id && o.zaklad.Count == 0
                               select o;
-                workersDatagrid.ItemsSource = workers.ToList();
+                workersDatagrid.ItemsSource = await workers.ToListAsync();
 
                 var rooms = db.sala.Where(s => s.zaklad_id == selectedZaklad.id);
-                RoomsDataGrid.ItemsSource = rooms.ToList();
+                RoomsDataGrid.ItemsSource = await rooms.ToListAsync();
 
                 var devices = from dev in db.sprzet
                               where dev.sala.zaklad_id == selectedZaklad.id
                               select dev;
-                DevicesDataGrid.ItemsSource = devices.ToList();
+                DevicesDataGrid.ItemsSource = await devices.ToListAsync();
                 upDataEnable(true);
                 StocktakingViewModel.Stocktaking.RealoadTabs(
                     raportsTab: true);
             }
         }
 
-        private void upDataTechnician()
+        private async void upDataTechnician()
         {
             zaklad selectedZaklad = getSelectionZaklad();
             if (selectedZaklad != null)
@@ -140,7 +140,7 @@ namespace Stocktaking.View
                 var devices = from dev in db.sprzet
                               where dev.sala.zaklad_id == selectedZaklad.id
                               select dev;
-                DevicesDataGrid.ItemsSource = devices.ToList();
+                DevicesDataGrid.ItemsSource = await devices.ToListAsync();
                 upDataEnable(true);
                 StocktakingViewModel.Stocktaking.RealoadTabs(
                     instituteDevicesTab: true,
@@ -221,7 +221,7 @@ namespace Stocktaking.View
 
 
         // wybranie zakładu
-        private void DataGridInstitute_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void DataGridInstitute_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DataGridInstitute.SelectedItem != null)
             {
@@ -232,15 +232,15 @@ namespace Stocktaking.View
                 var workers = from o in db.pracownik
                               where o.sala.zaklad_id == selectedZaklad.id && o.zaklad.Count == 0
                               select o;
-                workersDatagrid.ItemsSource = workers.ToList();
+                workersDatagrid.ItemsSource = await workers.ToListAsync();
 
                 var rooms = db.sala.Where(s => s.zaklad_id == selectedZaklad.id);
-                RoomsDataGrid.ItemsSource = rooms.ToList();
+                RoomsDataGrid.ItemsSource = await rooms.ToListAsync();
 
                 var devices = from dev in db.sprzet
                               where dev.sala.zaklad_id == selectedZaklad.id
                               select dev;
-                DevicesDataGrid.ItemsSource = devices.ToList();
+                DevicesDataGrid.ItemsSource = await devices.ToListAsync();
 
                 upDataEnable(true);
             }
@@ -261,39 +261,39 @@ namespace Stocktaking.View
         }
         private void TextBlockInstituteName_TextChanged(object sender, TextChangedEventArgs e)
         {
-                ChangeInstituteName.IsEnabled = true;         
+            ChangeInstituteName.IsEnabled = true;         
         }
 
         //zmiana nazwy zakladu
-        private void ChangeName_Click(object sender, RoutedEventArgs e)
+        private async void ChangeName_Click(object sender, RoutedEventArgs e)
         {
             getSelectionZaklad().nazwa = TextBlockInstituteName.Text;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             upData();
             ChangeInstituteName.IsEnabled = false;
         }
 
         //Zmiana szefa zakladu
-        private void ChangeChiefName_Click(object sender, RoutedEventArgs e)
+        private async void ChangeChiefName_Click(object sender, RoutedEventArgs e)
         {
             pracownik newChief = (pracownik)workersDatagrid.SelectedItem;
             getSelectionZaklad().kierownik = newChief.id;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             upData();
         }
 
         //zmiana pokoju od kierownika zakładu
-        private void ChangeChiefRoom_Click(object sender, RoutedEventArgs e)
+        private async void ChangeChiefRoom_Click(object sender, RoutedEventArgs e)
         {
             pracownik chief = getSelectionZaklad().pracownik;
             sala room = (sala)RoomsDataGrid.SelectedItem;
             chief.sala_id = room.id;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             upData();
         }
 
         //usuwanie instytut 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             zaklad temp = getSelectionZaklad();
             var sale = db.sala.Where(s => s.zaklad_id == temp.id).ToList();
@@ -302,14 +302,14 @@ namespace Stocktaking.View
                 item.zaklad_id = null;
             }
             db.zaklad.Remove(temp);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             upData();
         }
 
         //dodawanie nowego zakladu
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var MyAddNewInstitute = new AddNewInstitute(db);
+            AddNewInstitute MyAddNewInstitute = new AddNewInstitute(db);
             MyAddNewInstitute.ShowDialog();
             if (MyAddNewInstitute.Answer)
             {
@@ -389,10 +389,10 @@ namespace Stocktaking.View
         }
 
         //Usuwanie pokoju z zakładu
-        private void RemoveRoomButton_Click(object sender, RoutedEventArgs e)
+        private async void RemoveRoomButton_Click(object sender, RoutedEventArgs e)
         {
             sala myRoom = (sala)RoomsDataGrid.SelectedItem;
-            pracownik myChief = (pracownik)db.pracownik.SingleOrDefault(o => o.sala_id == myRoom.id && o.zaklad.Count != 0);
+            pracownik myChief = await db.pracownik.SingleOrDefaultAsync(o => o.sala_id == myRoom.id && o.zaklad.Count != 0);
             if (myChief != null)
             {
                 MessageBox.Show("Do tej Sali jest przypisany kierownik zakładu:\n" +
@@ -408,7 +408,7 @@ namespace Stocktaking.View
             {
                 item.sala_id = null;
             }
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             upData();
         }
 
