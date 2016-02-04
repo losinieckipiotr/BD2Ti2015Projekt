@@ -120,6 +120,11 @@ namespace Stocktaking.View
                     return;
 
                 konto k = ((UserRecord)userRecordDataGrid.SelectedItem).konto;
+                if(k == StocktakingViewModel.Stocktaking.User)
+                {
+                    ViewLogic.Blad("Nie możesz usunąć swojego konta!");
+                    return;
+                }
 
                 db.konto.Remove(k);
                 await db.SaveChangesAsync();
