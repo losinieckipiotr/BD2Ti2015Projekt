@@ -17,11 +17,9 @@ using Stocktaking.ViewModel;
 
 namespace Stocktaking.View
 {
-    /// <summary>
-    /// Interaction logic for UserAccountView.xaml
-    /// </summary>
-    /// 
-
+    //klasa pomocniczna, zluzy do wyswietlania danych o
+    //uzytkownikach
+    //poslugiwanie sie klasa pomocnicza ulatwia implementacje GUI
     class UserRecord
 	{
         public int id { get; set; }
@@ -38,6 +36,7 @@ namespace Stocktaking.View
         }
 	}
 
+    //kontrolka znajdujaca sie w zakladce do zarzadzania uzytkownikami
     public partial class UserAccountView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
@@ -45,11 +44,15 @@ namespace Stocktaking.View
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
+        //konstruktor
         public UserAccountView()
         {
             InitializeComponent();
         }  
 
+        //metoda uruchamiajaca sie wtedy gdy zostanie zmieniona widocznosc zakladki oraz gdy
+        //uzytkownik przejdzie na ta zakladke
+        //ladowane tutaj sa rekordy do gridow oraz inne typy do comboboxa
         private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -86,11 +89,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
 
+        //metoda przycisku zmiany loginu
         private async void loginButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -108,7 +111,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w loginButton_Click!");
             }
         }
 
@@ -146,8 +149,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w usunButton_Click!");
             }
         }
 
@@ -169,7 +171,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w typButton_Click!");
             }
         }
 
@@ -184,8 +186,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w hasloButton_Click!");
             }
         }
 
@@ -273,7 +274,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w dodajButton_Click!");
             }
         }
 
@@ -287,8 +288,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w userRecordDataGrid_SelectionChanged!");
             }
         }
 
