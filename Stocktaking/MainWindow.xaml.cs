@@ -56,9 +56,16 @@ namespace Stocktaking
             InstituteDevicesManagment.Visibility = InstituteDevicesList;
             InstituteWorkersManagment.Visibility = InstituteWorkersList;
             Raports.Visibility = RaportsVis;
-            Logout.Visibility = LogoutVis;
+            MenuControl.Visibility = LogoutVis;
             TabControlMenu.SelectedIndex=index;
             TabControlMenu.Visibility = Tab;
+        }
+
+        //otwieranie pomocy na przycisk F1
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F1)
+                MenuControl.Help_Click(this, null);
         }
     }
 }
