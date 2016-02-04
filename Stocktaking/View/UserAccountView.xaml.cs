@@ -115,6 +115,7 @@ namespace Stocktaking.View
             }
         }
 
+        //metoda przycisku usuwania uzytkwonika
         private async void usunButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -153,6 +154,7 @@ namespace Stocktaking.View
             }
         }
 
+        //metoda zmiany typu uztkownika
         private async void typButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -175,6 +177,7 @@ namespace Stocktaking.View
             }
         }
 
+        //metoda zmiany hasla uzytkownika
         private async void hasloButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -190,6 +193,7 @@ namespace Stocktaking.View
             }
         }
 
+        //metoda dodawania nowego uzytkownika
         private async void dodajButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -278,6 +282,8 @@ namespace Stocktaking.View
             }
         }
 
+        //metoda wywoluje sie przy zmianie zaznaczenia w siatce z uzytkownikami
+        //w comboBoxie wybierany jest nady typ uzytkownika
         private void userRecordDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -292,6 +298,7 @@ namespace Stocktaking.View
             }
         }
 
+        //metoda pomocnicza odswiezajaca konta
         private async void OdswiezKonta()
         {
             System.Windows.Data.CollectionViewSource userRecordViewSource =
@@ -306,6 +313,7 @@ namespace Stocktaking.View
             userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
         }
 
+        //metoda pomocniczna odswiezajaca pracownikow
         private async void OdswiezPracownikow()
         {
             System.Windows.Data.CollectionViewSource pracownikViewSource =
