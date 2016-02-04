@@ -128,44 +128,55 @@ namespace Stocktaking.View
         //zapisuje do fileName ścieżke do pliku
         private void GetPathButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog mySaveFileDialog = new SaveFileDialog();
-            mySaveFileDialog.InitialDirectory = @"c:\";
-            mySaveFileDialog.Filter = "Pliki tekstowe (*.txt)|*.txt";
-            var temp = mySaveFileDialog.ShowDialog();
-            if (temp.Value == true)
+            try
             {
-                fileName = mySaveFileDialog.FileName;
-                PathTextBox.Text = fileName;
-                GenerateRaportButton.IsEnabled = true;
+                SaveFileDialog mySaveFileDialog = new SaveFileDialog();
+                mySaveFileDialog.InitialDirectory = @"c:\";
+                mySaveFileDialog.Filter = "Pliki tekstowe (*.txt)|*.txt";
+                var temp = mySaveFileDialog.ShowDialog();
+                if (temp.Value == true)
+                {
+                    fileName = mySaveFileDialog.FileName;
+                    PathTextBox.Text = fileName;
+                    GenerateRaportButton.IsEnabled = true;
+                }
             }
-
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w GetPathButton_Click!");
+            }
         }
 
         //generuje raporty w zależności kto sie zalogował
         private void GenerateRaportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(PathTextBox.Text))
+            try
             {
-                return;
+                if (String.IsNullOrWhiteSpace(PathTextBox.Text))
+                {
+                    return;
+                }
+                int Type = userAcc.konto_typ_id;
+                switch (Type)
+                {
+                    case 2://Dyrektor zakładu
+                        managerRaport();
+                        break;
+                    case 3:// Kierownik instytutu
+                        chiefRaport();
+                        break;
+                    default:
+                        MessageBox.Show("Coś poszło nie tak.");
+                        break;
+                }
+                MessageBox.Show("Raport wygenerowano i zapisano.");
             }
-            int Type = userAcc.konto_typ_id;
-            switch (Type)
+            catch (Exception)
             {
-                case 2://Dyrektor zakładu
-                    managerRaport();
-                    break;
-                case 3:// Kierownik instytutu
-                    chiefRaport();
-                    break;
-                default:
-                    MessageBox.Show("Coś poszło nie tak.");
-                    break;
+                
+                ViewLogic.Blad("Wystapił bład w GetPathButton_Click!");
             }
-            MessageBox.Show("Raport wygenerowano i zapisano.");
         }
-
-        // delegat potrzebny do przesyłania funkcji które zwracają dane do tworzenia raportów
-        //private delegate dynamic getData();
 
         // tworzenie raportu dla dyrektora instytutu
         private async void chiefRaport()
@@ -174,11 +185,8 @@ namespace Stocktaking.View
             {
                 string myRaport = "Raport wygenerował " + TypeTextBlock.Text + ": " + NameTextBlock.Text + "\r\n";
                 myRaport += "dnia: " + DateTime.Now;
-                //getData getMyData = new getData(GetInstitue);
                 myRaport += createRaportFromInstitute(await GetInstitue());
-                //getMyData = await GetRoom();
                 myRaport += createRaportFromRoom(await GetRoom());
-                //getMyData = await GetDevice();
                 myRaport += createRaportFromDevice(await GetDevice());
                 await sw.WriteAsync(myRaport);
                 saveRaport(myRaport);
@@ -192,12 +200,8 @@ namespace Stocktaking.View
             {
                 string myRaport = "Raport wygenerował " + TypeTextBlock.Text + ": " + NameTextBlock.Text + "\r\n";
                 myRaport += "dnia: " + DateTime.Now;
-                //dynamic data = await getMyInstituteData();
-                //getData getMyData = new getData(data);
                 myRaport += createRaportFromInstitute(await getMyInstituteData());
-                //getMyData = await GetRoomInstitute();
                 myRaport += createRaportFromRoom(await GetRoomInstitute());
-                //getMyData = await GetDeviceInstitute();
                 myRaport += createRaportFromDevice(await GetDeviceInstitute());
                 await sw.WriteAsync(myRaport);
                 saveRaport(myRaport);
@@ -283,27 +287,63 @@ namespace Stocktaking.View
         // gdy radio button sprzęt to przypisuje dane
         private async void Device_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = await GetDevice();
+            try
+            {
+                RaportDatagrid.ItemsSource = await GetDevice();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Device_Checked!");
+            }
+            
         }
         // gdy radio button sale to przypisuje dane
         private async void Room_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = await GetRoom();
+            try
+            {
+                RaportDatagrid.ItemsSource = await GetRoom();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Room_Checked!");
+            }
         }
         // gdy radio button zakłady to przypisuje dane
         private async void Worker_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = await GetInstitue();
+            try
+            {
+                RaportDatagrid.ItemsSource = await GetInstitue();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Worker_Checked!");
+            }
         }
         //gdy radio button sprzęt to przypisuje dane-dyrektor zakładu
         private async void DeviceMan_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = await GetDeviceInstitute();
+            try
+            {
+                RaportDatagrid.ItemsSource = await GetDeviceInstitute();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w DeviceMan_Checked!");
+            }
         }
         //gdy radio button sale to przypisuje dane-dyrektor zakładu
         private async void RoomMan_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = await GetRoomInstitute();
+            try
+            {
+                RaportDatagrid.ItemsSource = await GetRoomInstitute();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w RoomMan_Checked!");
+            }
         }
 
         //zwraca dane o zakładzie w którym jest kierownik zakładu
@@ -465,8 +505,16 @@ namespace Stocktaking.View
         // otwarcie nowego okna w celu wczytaniu do pliki starego raportu
         private void GenerateOldRaportButton_Click(object sender, RoutedEventArgs e)
         {
-            var mySelectOldRaport = new SelectOldRaport(db);
-            mySelectOldRaport.ShowDialog();
+            try
+            {
+                var mySelectOldRaport = new SelectOldRaport(db);
+                mySelectOldRaport.ShowDialog();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w GenerateOldRaportButton_Click!");
+                throw;
+            }
         }
     }
 }
