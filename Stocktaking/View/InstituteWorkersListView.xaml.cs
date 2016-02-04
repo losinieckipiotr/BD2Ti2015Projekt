@@ -91,8 +91,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
 
@@ -115,8 +114,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w pracownikUpdate_Click!");
             }
         }
 
@@ -160,8 +158,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w pracowikAdd_Click!");
             }
         }
 
@@ -181,8 +178,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w pracownikDelete_Click!");
             }
         }
 

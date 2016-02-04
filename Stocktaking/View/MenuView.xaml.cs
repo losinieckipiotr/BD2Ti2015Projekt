@@ -84,7 +84,14 @@ namespace Stocktaking.View
         //metoda zamkniecia aplikacji
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            StocktakingViewModel.Stocktaking.Window.Close();
+            try
+            {
+                StocktakingViewModel.Stocktaking.Window.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Close_Click");
+            }
         }
     }
 }

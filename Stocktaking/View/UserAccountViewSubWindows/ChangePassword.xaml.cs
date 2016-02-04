@@ -46,14 +46,20 @@ namespace Stocktaking.View.UserAccountViewSubWindows
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w zmienButton_Click!");
             }
         }
 
         private void anuljButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w zmienButton_Click!");
+            }
         }
     }
 }

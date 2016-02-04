@@ -105,8 +105,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
 
@@ -137,7 +136,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w DeviceUpdate_Click!");
             }
         }
 
@@ -194,7 +193,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w DeviceAdd_Click!");
             }
         }
 
@@ -214,8 +213,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w DeviceDelete_Click!");
             }
         }
 

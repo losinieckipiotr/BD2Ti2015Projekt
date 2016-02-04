@@ -11,12 +11,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.Entity;
+using Stocktaking.ViewModel;
 
 namespace Stocktaking.View.InstituteManagementViewSubWindows
 {
-    /// <summary>
-    /// Interaction logic for AddDevice.xaml
-    /// </summary>
     public partial class AddDevice : Window
     {
         private StocktakingDatabaseEntities myDb;
@@ -30,41 +29,77 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
         }
 
         //wczytanie danych
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            roomsDataGrid.ItemsSource = myDb.sala.Where(s => s.zaklad_id == myZaklad.id).ToList();
-            DeviceDataGrid.ItemsSource = myDb.sprzet.ToList();
+            try
+            {
+                roomsDataGrid.ItemsSource = await myDb.sala.Where(s => s.zaklad_id == myZaklad.id).ToListAsync();
+                DeviceDataGrid.ItemsSource = await myDb.sprzet.ToListAsync();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Window_Loaded!");
+            }
         }
 
         //sprawdzanie czy przycisk moze być aktywny
         private void DeviceDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            upDataUi();
+            try
+            {
+                upDataUi();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w DeviceDataGrid_SelectionChanged!");
+            }
         }
 
         // powybraniu elementów w datagrid, wprowadzenie zmian czyli przypisanie sprzętu do sali z zakładu
-        private void SelectButton_Click(object sender, RoutedEventArgs e)
+        private async void SelectButton_Click(object sender, RoutedEventArgs e)
         {
-            sprzet device = (sprzet)DeviceDataGrid.SelectedItem;
-            sala room = (sala)roomsDataGrid.SelectedItem;
-            device.sala_id = room.id;
-            myDb.SaveChanges();
+            try
+            {
+                sprzet device = (sprzet)DeviceDataGrid.SelectedItem;
+                sala room = (sala)roomsDataGrid.SelectedItem;
+                device.sala_id = room.id;
+                await myDb.SaveChangesAsync();
 
-            answer = true;
-            this.Close();
+                answer = true;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w SelectButton_Click!");
+            }
         }
 
         //zamknięcie okna bez zmian
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            answer = false;
-            this.Close();
+            try
+            {
+                answer = false;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w CancelButton_Click!");
+            }
         }
 
         //sprawdzenie czy przycisk może być aktywny
         private void roomsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            upDataUi();
+            try
+            {
+                upDataUi();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w roomsDataGrid_SelectionChanged!");
+            }
+            
         }
 
         //sprawdzenie czy przycisk może być aktywny

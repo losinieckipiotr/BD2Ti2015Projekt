@@ -31,7 +31,6 @@ namespace Stocktaking
         {
             LoginControl.focusLogin();
             StocktakingViewModel.CreateStocktaking(this);
-            
         }
 
         // metoda zmienia visibility każdej zakładki,
@@ -65,8 +64,15 @@ namespace Stocktaking
         //otwieranie pomocy na przycisk F1
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.F1)
-                StocktakingViewModel.Stocktaking.OpenHelp();
+            try
+            {
+                if (e.Key == Key.F1)
+                    StocktakingViewModel.Stocktaking.OpenHelp();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
+            }
         }
     }
 }

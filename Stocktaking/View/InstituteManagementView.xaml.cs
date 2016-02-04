@@ -72,8 +72,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
 
@@ -91,12 +90,12 @@ namespace Stocktaking.View
         }
 
         // przeładowanie danych dla dyrektora instytutu
-        private void upDataChief()
+        private async void upDataChief()
         {
             ChiefNameTextBlock.Text = null;
             zaklad selectedZaklad = (zaklad)DataGridInstitute.SelectedItem;
             DataGridInstitute.ItemsSource = null;
-            db.zaklad.Load();
+            await db.zaklad.LoadAsync();
             DataGridInstitute.ItemsSource = db.zaklad.Local.ToBindingList();
             DataGridInstitute.SelectedItem = selectedZaklad;
             StocktakingViewModel.Stocktaking.RealoadTabs(
@@ -233,30 +232,37 @@ namespace Stocktaking.View
         // wybranie zakładu
         private async void DataGridInstitute_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataGridInstitute.SelectedItem != null)
+            try
             {
-                zaklad selectedZaklad = getSelectionZaklad();
-                TextBlockInstituteName.Text = selectedZaklad.nazwa;
-                pracownik temp = selectedZaklad.pracownik;
-                ChiefNameTextBlock.Text = temp.imie + " " + temp.nazwisko + " " + temp.sala.numer;
-                var workers = from o in db.pracownik
-                              where o.sala.zaklad_id == selectedZaklad.id && o.zaklad.Count == 0
-                              select o;
-                workersDatagrid.ItemsSource = await workers.ToListAsync();
+                if (DataGridInstitute.SelectedItem != null)
+                {
+                    zaklad selectedZaklad = getSelectionZaklad();
+                    TextBlockInstituteName.Text = selectedZaklad.nazwa;
+                    pracownik temp = selectedZaklad.pracownik;
+                    ChiefNameTextBlock.Text = temp.imie + " " + temp.nazwisko + " " + temp.sala.numer;
+                    var workers = from o in db.pracownik
+                                  where o.sala.zaklad_id == selectedZaklad.id && o.zaklad.Count == 0
+                                  select o;
+                    workersDatagrid.ItemsSource = await workers.ToListAsync();
 
-                var rooms = db.sala.Where(s => s.zaklad_id == selectedZaklad.id);
-                RoomsDataGrid.ItemsSource = await rooms.ToListAsync();
+                    var rooms = db.sala.Where(s => s.zaklad_id == selectedZaklad.id);
+                    RoomsDataGrid.ItemsSource = await rooms.ToListAsync();
 
-                var devices = from dev in db.sprzet
-                              where dev.sala.zaklad_id == selectedZaklad.id
-                              select dev;
-                DevicesDataGrid.ItemsSource = await devices.ToListAsync();
+                    var devices = from dev in db.sprzet
+                                  where dev.sala.zaklad_id == selectedZaklad.id
+                                  select dev;
+                    DevicesDataGrid.ItemsSource = await devices.ToListAsync();
 
-                upDataEnable(true);
+                    upDataEnable(true);
+                }
+                else
+                {
+                    upDataEnable(false);
+                }
             }
-            else
+            catch (Exception)
             {
-                upDataEnable(false);
+                ViewLogic.Blad("Wystapił bład w DataGridInstitute_SelectionChanged!");
             }
         }
 
@@ -273,181 +279,288 @@ namespace Stocktaking.View
         //przycisk aktywny po zmianie nazwy zakładu
         private void TextBlockInstituteName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ChangeInstituteName.IsEnabled = true;         
+            try
+            {
+                ChangeInstituteName.IsEnabled = true;
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w TextBlockInstituteName_TextChanged!");
+            }       
         }
 
         //zmiana nazwy zakladu
         private async void ChangeName_Click(object sender, RoutedEventArgs e)
         {
-            getSelectionZaklad().nazwa = TextBlockInstituteName.Text;
-            await db.SaveChangesAsync();
-            upData();
-            ChangeInstituteName.IsEnabled = false;
+            try
+            {
+                getSelectionZaklad().nazwa = TextBlockInstituteName.Text;
+                await db.SaveChangesAsync();
+                upData();
+                ChangeInstituteName.IsEnabled = false;
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w ChangeName_Click!");
+            }
         }
 
         //Zmiana szefa zakladu
         private async void ChangeChiefName_Click(object sender, RoutedEventArgs e)
         {
-            pracownik newChief = (pracownik)workersDatagrid.SelectedItem;
-            getSelectionZaklad().kierownik = newChief.id;
-            await db.SaveChangesAsync();
-            upData();
+            try
+            {
+                pracownik newChief = (pracownik)workersDatagrid.SelectedItem;
+                getSelectionZaklad().kierownik = newChief.id;
+                await db.SaveChangesAsync();
+                upData();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w ChangeChiefName_Click!");
+            }
         }
 
         //zmiana pokoju od kierownika zakładu
         private async void ChangeChiefRoom_Click(object sender, RoutedEventArgs e)
         {
-            pracownik chief = getSelectionZaklad().pracownik;
-            sala room = (sala)RoomsDataGrid.SelectedItem;
-            chief.sala_id = room.id;
-            await db.SaveChangesAsync();
-            upData();
+            try
+            {
+                pracownik chief = getSelectionZaklad().pracownik;
+                sala room = (sala)RoomsDataGrid.SelectedItem;
+                chief.sala_id = room.id;
+                await db.SaveChangesAsync();
+                upData();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w ChangeChiefRoom_Click!");
+            }
         }
 
         //usuwanie instytut 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            zaklad temp = getSelectionZaklad();
-            var sale = db.sala.Where(s => s.zaklad_id == temp.id).ToList();
-            foreach (var item in sale)
+            try
             {
-                item.zaklad_id = null;
+                zaklad temp = getSelectionZaklad();
+                var sale = db.sala.Where(s => s.zaklad_id == temp.id).ToList();
+                foreach (var item in sale)
+                {
+                    item.zaklad_id = null;
+                }
+                db.zaklad.Remove(temp);
+                await db.SaveChangesAsync();
+                upData();
             }
-            db.zaklad.Remove(temp);
-            await db.SaveChangesAsync();
-            upData();
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Button_Click!");
+            }
         }
 
         //dodawanie nowego zakladu
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            AddNewInstitute MyAddNewInstitute = new AddNewInstitute(db);
-            MyAddNewInstitute.ShowDialog();
-            if (MyAddNewInstitute.Answer)
+            try
             {
-                upData();
+                AddNewInstitute MyAddNewInstitute = new AddNewInstitute(db);
+                MyAddNewInstitute.ShowDialog();
+                if (MyAddNewInstitute.Answer)
+                {
+                    upData();
+                }
             }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Button_Click_1!");
+            }
+
         }
 
         //jeśli pracownik zaznaczony to przyciski aktywne
         private void workersDatagrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (workersDatagrid.SelectedItem != null)
+            try
             {
-                RemoveWorkerButton.IsEnabled = true;
-                ChangeChiefName.IsEnabled = true;
+                if (workersDatagrid.SelectedItem != null)
+                {
+                    RemoveWorkerButton.IsEnabled = true;
+                    ChangeChiefName.IsEnabled = true;
+                }
+                else
+                {
+                    RemoveWorkerButton.IsEnabled = false;
+                    ChangeChiefName.IsEnabled = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                RemoveWorkerButton.IsEnabled = false;
-                ChangeChiefName.IsEnabled = false;
+                ViewLogic.Blad("Wystapił bład w workersDatagrid_SelectionChanged!");
             }
+            
         }
 
         //jeśli sala zaznaczona to przyciski aktywne
         private void RoomsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (RoomsDataGrid.SelectedItem != null)
+            try
             {
-                RemoveRoomButton.IsEnabled = true;
-                ChangeChiefRoom.IsEnabled = true;
+                if (RoomsDataGrid.SelectedItem != null)
+                {
+                    RemoveRoomButton.IsEnabled = true;
+                    ChangeChiefRoom.IsEnabled = true;
+                }
+                else
+                {
+                    RemoveRoomButton.IsEnabled = false;
+                    ChangeChiefRoom.IsEnabled = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                RemoveRoomButton.IsEnabled = false;
-                ChangeChiefRoom.IsEnabled = false;
+                ViewLogic.Blad("Wystapił bład w RoomsDataGrid_SelectionChanged!");
             }
         }
 
         // jeśli sprzęt zaznaczony to przycisk aktywny
         private void DevicesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DevicesDataGrid.SelectedItem != null)
+            try
             {
-                MoveDeviceButton.IsEnabled = true;
+                if (DevicesDataGrid.SelectedItem != null)
+                {
+                    MoveDeviceButton.IsEnabled = true;
+                }
+                else
+                {
+                    MoveDeviceButton.IsEnabled = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                MoveDeviceButton.IsEnabled = false;
+                ViewLogic.Blad("Wystapił bład w DevicesDataGrid_SelectionChanged!");
             }
         }
 
         //Dodawanie pracownika do zkładu
         private void AddWorkerButton_Click(object sender, RoutedEventArgs e)
         {
-            var MyAddNewWorker = new AddNewWorker(db, getSelectionZaklad());
-            MyAddNewWorker.ShowDialog();
-            if (MyAddNewWorker.answer)
+            try
             {
-                upData();
+                var MyAddNewWorker = new AddNewWorker(db, getSelectionZaklad());
+                MyAddNewWorker.ShowDialog();
+                if (MyAddNewWorker.answer)
+                {
+                    upData();
+                }
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w AddWorkerButton_Click!");
             }
         }
 
         //usuwanie pracownika z zakładu
-        private void RemoveWorkerButton_Click(object sender, RoutedEventArgs e)
+        private async void RemoveWorkerButton_Click(object sender, RoutedEventArgs e)
         {
-            pracownik temp = (pracownik)workersDatagrid.SelectedItem;
-            temp.sala_id = null;
-            db.SaveChanges();
-            upData();
+            try
+            {
+                pracownik temp = (pracownik)workersDatagrid.SelectedItem;
+                temp.sala_id = null;
+                await db.SaveChangesAsync();
+                upData();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w RemoveWorkerButton_Click!");
+            }
         }
 
         //dodwanie pokoju do zakładu
         private void AddRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            var myAddNewRoom = new AddNewRoom(db, getSelectionZaklad());
-            myAddNewRoom.ShowDialog();
-            if (myAddNewRoom.answer)
+            try
             {
-                upData();
-                StocktakingViewModel.Stocktaking.RealoadTabs(instituteDevicesTab: true);
+                var myAddNewRoom = new AddNewRoom(db, getSelectionZaklad());
+                myAddNewRoom.ShowDialog();
+                if (myAddNewRoom.answer)
+                {
+                    upData();
+                    StocktakingViewModel.Stocktaking.RealoadTabs(instituteDevicesTab: true);
+                }
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w AddRoomButton_Click!");
             }
         }
 
         //Usuwanie pokoju z zakładu
         private async void RemoveRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            sala myRoom = (sala)RoomsDataGrid.SelectedItem;
-            pracownik myChief = await db.pracownik.SingleOrDefaultAsync(o => o.sala_id == myRoom.id && o.zaklad.Count != 0);
-            if (myChief != null)
+            try
             {
-                MessageBox.Show("Do tej Sali jest przypisany kierownik zakładu:\n" +
-                    myChief.imie + " " + myChief.nazwisko +
-                    ".\nJeśli chcesz usunąć tę sale z zakladu najpierw zmień kierownika na takiego,który znajduje się w innej sali"
-                    + "\nlub obecnego dodaj do innej sali.");
-                return;
+                sala myRoom = (sala)RoomsDataGrid.SelectedItem;
+                pracownik myChief = await db.pracownik.SingleOrDefaultAsync(o => o.sala_id == myRoom.id && o.zaklad.Count != 0);
+                if (myChief != null)
+                {
+                    MessageBox.Show("Do tej Sali jest przypisany kierownik zakładu:\n" +
+                        myChief.imie + " " + myChief.nazwisko +
+                        ".\nJeśli chcesz usunąć tę sale z zakladu najpierw zmień kierownika na takiego,który znajduje się w innej sali"
+                        + "\nlub obecnego dodaj do innej sali.");
+                    return;
+                }
+                myRoom.zaklad_id = null;
+                // po usunięciu sali z zakladu nalezy usunąć wszystkich pracowników z tej sali
+                var workersFromRoom = db.pracownik.Where(o => o.sala_id == myRoom.id);
+                foreach (var item in workersFromRoom)
+                {
+                    item.sala_id = null;
+                }
+                await db.SaveChangesAsync();
+                upData();
+                StocktakingViewModel.Stocktaking.RealoadTabs(instituteDevicesTab: true);
             }
-            myRoom.zaklad_id = null;
-            // po usunięciu sali z zakladu nalezy usunąć wszystkich pracowników z tej sali
-            var workersFromRoom = db.pracownik.Where(o => o.sala_id == myRoom.id);
-            foreach (var item in workersFromRoom)
+            catch (Exception)
             {
-                item.sala_id = null;
+                ViewLogic.Blad("Wystapił bład w RemoveRoomButton_Click!");
             }
-            await db.SaveChangesAsync();
-            upData();
-            StocktakingViewModel.Stocktaking.RealoadTabs(instituteDevicesTab: true);
         }
 
         //przenoszenie sprzętu do innej sali
         private void MoveDeviceButton_Click(object sender, RoutedEventArgs e)
         {
-            var myMoveDevice = new MoveDevice(db, (sprzet)DevicesDataGrid.SelectedItem);
-            myMoveDevice.ShowDialog();
-            if (myMoveDevice.answer)
+            try
             {
-                upData();
+                var myMoveDevice = new MoveDevice(db, (sprzet)DevicesDataGrid.SelectedItem);
+                myMoveDevice.ShowDialog();
+                if (myMoveDevice.answer)
+                {
+                    upData();
+                }
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w MoveDeviceButton_Click!");
             }
         }
 
         // dodawanie sprzętu
         private void AddDeviceButton_Click(object sender, RoutedEventArgs e)
         {
-            var myAddDevice = new AddDevice(db, getSelectionZaklad());
-            myAddDevice.ShowDialog();
-            if (myAddDevice.answer)
+            try
             {
-                upData();
+                var myAddDevice = new AddDevice(db, getSelectionZaklad());
+                myAddDevice.ShowDialog();
+                if (myAddDevice.answer)
+                {
+                    upData();
+                }
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w AddDeviceButton_Click!");
             }
         }
     }

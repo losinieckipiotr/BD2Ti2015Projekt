@@ -90,8 +90,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
        

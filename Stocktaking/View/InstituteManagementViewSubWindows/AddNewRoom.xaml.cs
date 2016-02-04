@@ -11,12 +11,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.Entity;
+using Stocktaking.ViewModel;
 
 namespace Stocktaking.View.InstituteManagementViewSubWindows
 {
-    /// <summary>
-    /// Interaction logic for AddNewRoom.xaml
-    /// </summary>
     public partial class AddNewRoom : Window
     {
         private StocktakingDatabaseEntities myDb;
@@ -30,33 +29,62 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
         }
 
         //wczytanie danych
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            RoomDataGrid.ItemsSource = myDb.sala.Where(s => s.zaklad_id == null).ToList();
+            try
+            {
+                RoomDataGrid.ItemsSource = await myDb.sala.Where(s => s.zaklad_id == null).ToListAsync();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Window_Loaded!");
+            }
         }
 
         // gdy wybrano elemnet przycisk jest aktywny
         private void ChoicPersonDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectButton.IsEnabled = true;
+            try
+            {
+                SelectButton.IsEnabled = true;
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w ChoicPersonDataGrid_SelectionChanged!");
+            }
         }
 
         //wprowadzenie zmian, czyli dodanie sali do zakładu i zamknięcie okna
-        private void SelectButton_Click(object sender, RoutedEventArgs e)
+        private async void SelectButton_Click(object sender, RoutedEventArgs e)
         {
-            sala myRoom = (sala)RoomDataGrid.SelectedItem;
-            myRoom.zaklad_id = myZaklad.id;
-            myDb.SaveChanges();
+            try
+            {
+                sala myRoom = (sala)RoomDataGrid.SelectedItem;
+                myRoom.zaklad_id = myZaklad.id;
+                await myDb.SaveChangesAsync();
 
-            answer = true;
-            this.Close();
+                answer = true;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w SelectButton_Click!");
+            }
+
         }
 
         // zamknięcie okna bez zmian
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            answer = false;
-            this.Close();
+            try
+            {
+                answer = false;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w CancelButton_Click!");
+            }
         }
     }
 }

@@ -11,12 +11,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.Entity;
+using Stocktaking.ViewModel;
 
 namespace Stocktaking.View.InstituteManagementViewSubWindows
 {
-    /// <summary>
-    /// Interaction logic for MoveDevice.xaml
-    /// </summary>
     public partial class MoveDevice : Window
     {
         private StocktakingDatabaseEntities myDb;
@@ -32,52 +31,83 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
         // przyciski aktywne w zależności czy wybrano element
         private void RoomsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (RoomsDataGrid.SelectedItem != null)
+            try
             {
-                SelectButton.IsEnabled = true;
+                if (RoomsDataGrid.SelectedItem != null)
+                {
+                    SelectButton.IsEnabled = true;
+                }
+                else
+                {
+                    SelectButton.IsEnabled = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                SelectButton.IsEnabled = false;
+                ViewLogic.Blad("Wystapił bład w RoomsDataGrid_SelectionChanged!");
             }
         }
 
         // przeładowanie danych w zależności co jest zaznaczone
-        private void DataGridInstitute_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void DataGridInstitute_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataGridInstitute.SelectedItem != null)
+            try
             {
-                zaklad myZaklad = (zaklad)DataGridInstitute.SelectedItem;
-                RoomsDataGrid.ItemsSource = myDb.sala.Where(s => s.zaklad_id == myZaklad.id).ToList();
+                if (DataGridInstitute.SelectedItem != null)
+                {
+                    zaklad myZaklad = (zaklad)DataGridInstitute.SelectedItem;
+                    RoomsDataGrid.ItemsSource = await myDb.sala.Where(s => s.zaklad_id == myZaklad.id).ToListAsync();
+                }
             }
-            else
+            catch (Exception)
             {
-
+                ViewLogic.Blad("Wystapił bład w DataGridInstitute_SelectionChanged!");
             }
         }
 
         // załądowanie danych
-        private void DataGridInstitute_Loaded(object sender, RoutedEventArgs e)
+        private async void DataGridInstitute_Loaded(object sender, RoutedEventArgs e)
         {
-            DataGridInstitute.ItemsSource = myDb.zaklad.ToList();
-            RoomsDataGrid.ItemsSource = myDb.sala.ToList();
+            try
+            {
+                DataGridInstitute.ItemsSource = await myDb.zaklad.ToListAsync();
+                RoomsDataGrid.ItemsSource = await myDb.sala.ToListAsync();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w DataGridInstitute_Loaded!");
+            }
         }
 
         //zapisanie zmian i wyjście z okna
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
-            sala myRoom = (sala)RoomsDataGrid.SelectedItem;
-            myDevice.sala_id = myRoom.id;
-            myDb.SaveChanges();
-            answer = true;
-            this.Close();
+            try
+            {
+                sala myRoom = (sala)RoomsDataGrid.SelectedItem;
+                myDevice.sala_id = myRoom.id;
+                myDb.SaveChanges();
+                answer = true;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w SelectButton_Click!");
+            }
         }
 
         // wyjście z okna bez zmian
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            answer = false;
-            this.Close();
+            try
+            {
+                answer = false;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w CancelButton_Click!");
+            }
         }
     }
 }

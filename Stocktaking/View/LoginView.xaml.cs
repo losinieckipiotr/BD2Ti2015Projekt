@@ -32,14 +32,28 @@ namespace Stocktaking.View
         //logowanie przy nacisnieciu enter
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-                Login();
+            try
+            {
+                if (e.Key == Key.Enter)
+                    Login();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w UserControl_KeyDown!");
+            }
         }
 
         //lub nacisnieciu na przycisk
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Login();
+            try
+            {
+                Login();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Button_Click!");
+            }
         }
 
         //metoda logowania

@@ -97,17 +97,23 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
 
         // zapobieganie wpisywania do kontrolki TextBox znaków innych niż cyfry
         private void Number_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (!char.IsDigit(e.Text, e.Text.Length - 1))
+            try
             {
-                e.Handled = true;
+                if (!char.IsDigit(e.Text, e.Text.Length - 1))
+                {
+                    e.Handled = true;
+                }
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Number_PreviewTextInput!");
             }
         }
 
@@ -122,8 +128,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w salaDataGrid_SelectionChanged!");
             }
         }
 
@@ -157,7 +162,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w RoomUpdate_Click!");
             }
         }
 
@@ -221,7 +226,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w RoomAdd_Click!");
             }
         }
 
@@ -242,8 +247,7 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w RoomDelete_Click!");
             }
         }
 

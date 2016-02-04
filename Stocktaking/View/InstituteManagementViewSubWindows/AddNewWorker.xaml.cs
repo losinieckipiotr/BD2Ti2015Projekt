@@ -11,12 +11,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.Entity;
+using Stocktaking.ViewModel;
 
 namespace Stocktaking.View.InstituteManagementViewSubWindows
 {
-    /// <summary>
-    /// Interaction logic for AddNewWorker.xaml
-    /// </summary>
     public partial class AddNewWorker : Window
     {
         private StocktakingDatabaseEntities myDb;
@@ -30,26 +29,47 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
         }
 
         //załadowanie danych do dataGrid
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var workers = myDb.pracownik.Where(o => o.sala_id == null).ToList();
-            var rooms = myDb.sala.Where(s => s.zaklad_id == myZaklad.id).ToList();
+            try
+            {
+                var workers = await myDb.pracownik.Where(o => o.sala_id == null).ToListAsync();
+                var rooms = await myDb.sala.Where(s => s.zaklad_id == myZaklad.id).ToListAsync();
 
-            WorkerDataGrid.ItemsSource = workers;
-            RoomDataGrid.ItemsSource = rooms;
-            InstituteTextBlock.Text = myZaklad.nazwa;
+                WorkerDataGrid.ItemsSource = workers;
+                RoomDataGrid.ItemsSource = rooms;
+                InstituteTextBlock.Text = myZaklad.nazwa;
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w Window_Loaded!");
+            }
         }
 
         // sprawdzanie zaznaczenia
         private void WorkerDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            upDataUi();
+            try
+            {
+                upDataUi();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w WorkerDataGrid_SelectionChanged!");
+            }
         }
 
         // sprawdzanie zaznaczenia
         private void RoomDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            upDataUi();
+            try
+            {
+                upDataUi();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w RoomDataGrid_SelectionChanged!");
+            }
         }
 
         // gdy wybrano elementy z obu dataGrid to przycisk jest aktywny
@@ -60,22 +80,36 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
         }
 
         //wprowadzenie zmian, przypisanie pracownika do zakładu i jednocześnie do sali, zamknięcie okna
-        private void SelectButton_Click(object sender, RoutedEventArgs e)
+        private async void SelectButton_Click(object sender, RoutedEventArgs e)
         {
-            pracownik worker = (pracownik)WorkerDataGrid.SelectedItem;
-            sala room = (sala)RoomDataGrid.SelectedItem;
-            worker.sala_id = room.id;
-            myDb.SaveChanges();
+            try
+            {
+                pracownik worker = (pracownik)WorkerDataGrid.SelectedItem;
+                sala room = (sala)RoomDataGrid.SelectedItem;
+                worker.sala_id = room.id;
+                await myDb.SaveChangesAsync();
 
-            answer = true;
-            this.Close();
+                answer = true;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w SelectButton_Click!");
+            }
         }
 
         //zamknięcie okna beż wprowadzenia zmian
         private void CanselButton_Click(object sender, RoutedEventArgs e)
         {
-            answer = false;
-            this.Close();
+            try
+            {
+                answer = false;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w CanselButton_Click!");
+            }
         }
     }
 }

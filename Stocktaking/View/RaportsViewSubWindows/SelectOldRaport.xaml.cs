@@ -14,14 +14,12 @@ using System.Windows.Shapes;
 using System.IO;
 using System.ComponentModel;
 using Microsoft.Win32;
+using System.Data.Entity;
+using Stocktaking.ViewModel;
+using Stocktaking.Data;
 
 namespace Stocktaking.View.RaportsViewSubWindows
 {
-    /// <summary>
-    /// Interaction logic for SelectOldRaport.xaml
-    /// </summary>
-    using ViewModel;
-    using Data;
     public partial class SelectOldRaport : Window
     {
         private StocktakingDatabaseEntities myDb;
@@ -33,23 +31,37 @@ namespace Stocktaking.View.RaportsViewSubWindows
 
         private void RaportDatagrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            buttonUpdata();
+            try
+            {
+                buttonUpdata();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w RaportDatagrid_SelectionChanged!");
+            }
         }
 
         //w zależności kto się zalogował generuje inną listę dostępnych raportów
         private void RaportDatagrid_Loaded(object sender, RoutedEventArgs e)
         {
-            int Type = StocktakingViewModel.Stocktaking.User.konto_typ_id;
-            switch (Type)
+            try
             {
-                case 2://Dyrektor zakładu
-                    upDataMan();
-                    break;
-                case 3:// Kierownik instytutu
-                    upDataChief();
-                    break;
-                default:
-                    break;
+                int Type = StocktakingViewModel.Stocktaking.User.konto_typ_id;
+                switch (Type)
+                {
+                    case 2://Dyrektor zakładu
+                        upDataMan();
+                        break;
+                    case 3:// Kierownik instytutu
+                        upDataChief();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w RaportDatagrid_Loaded!");
             }
         }
     
@@ -61,26 +73,33 @@ namespace Stocktaking.View.RaportsViewSubWindows
         }
 
         //wczytanie danych dla dyrektora zakładu
-        private void upDataMan()
+        private async void upDataMan()
         {
             zaklad zak = DataFunctions.GetZaklad(StocktakingViewModel.Stocktaking.User.pracownik);
             var raports = myDb.raport.Where(r => r.konto.pracownik.id == zak.pracownik.id);
-            RaportDatagrid.ItemsSource = raports.ToList();
+            RaportDatagrid.ItemsSource = await raports.ToListAsync();
         }
 
         private string fileName = "";
         //pobranie ścieżki zapisu do pliku
         private void GetPathButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog mySaveFileDialog = new SaveFileDialog();
-            mySaveFileDialog.InitialDirectory = @"c:\";
-            mySaveFileDialog.Filter = "Pliki tekstowe (*.txt)|*.txt";
-            var temp = mySaveFileDialog.ShowDialog();
-            if (temp.Value == true)
+            try
             {
-                fileName = mySaveFileDialog.FileName;
-                PathTextBox.Text = fileName;
-                buttonUpdata();
+                SaveFileDialog mySaveFileDialog = new SaveFileDialog();
+                mySaveFileDialog.InitialDirectory = @"c:\";
+                mySaveFileDialog.Filter = "Pliki tekstowe (*.txt)|*.txt";
+                var temp = mySaveFileDialog.ShowDialog();
+                if (temp.Value == true)
+                {
+                    fileName = mySaveFileDialog.FileName;
+                    PathTextBox.Text = fileName;
+                    buttonUpdata();
+                }
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w GetPathButton_Click!");
             }
         }
 
@@ -94,21 +113,35 @@ namespace Stocktaking.View.RaportsViewSubWindows
         //wyjście z okienka
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w CancelButton_Click!");
+            }
         }
 
         //zapisywanie raportu do pliku i zamknięcie okna
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            using (StreamWriter sw = new StreamWriter(fileName))
+            try
             {
-                raport rap = (raport)RaportDatagrid.SelectedItem;
-                string myRaport = "Raport wczytano z bazy dnia:" + DateTime.Now;
-                myRaport += "\r\n\r\n";
-                myRaport += rap.raport1;
-                sw.Write(myRaport);
+                using (StreamWriter sw = new StreamWriter(fileName))
+                {
+                    raport rap = (raport)RaportDatagrid.SelectedItem;
+                    string myRaport = "Raport wczytano z bazy dnia:" + DateTime.Now;
+                    myRaport += "\r\n\r\n";
+                    myRaport += rap.raport1;
+                    await sw.WriteAsync(myRaport);
+                }
+                this.Close();
             }
-            this.Close();
+            catch (Exception)
+            {
+                ViewLogic.Blad("Wystapił bład w SaveButton_Click!");
+            }
         }
     }
 }
