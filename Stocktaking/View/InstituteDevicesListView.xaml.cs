@@ -17,6 +17,7 @@ using System.Data.Entity;
 
 namespace Stocktaking.View
 {
+    // klasa reprezentująca wpis sprzętu w kontrolce DataGrid
     class DeviceRecord
     {
         public int id { get; set; }
@@ -56,6 +57,7 @@ namespace Stocktaking.View
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
+        // funkcja odpowiedzialna za ładowanie danych do elementów GUI
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -112,6 +114,7 @@ namespace Stocktaking.View
             }
         }
 
+        // funkcja aktualizowania danych sprzętu istniejącego już w bazie 
         private void DeviceUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -142,13 +145,16 @@ namespace Stocktaking.View
             }
         }
 
+        // funkcja dodawania nowego sprzętu do bazy
         private void DeviceAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                // potwierdzenie
                 if (!ViewLogic.Potwierdz("Czy chcesz dodać sprzęt?"))
                     return;
 
+                // pobranie i weryfikacja danych z GUI
                 string nowyOpis = AddDeviceDescription.Text;
                 if (nowyOpis == "")
                 {
@@ -174,6 +180,7 @@ namespace Stocktaking.View
                 sprzet_typ nowyTyp = (sprzet_typ)AddDeviceType.SelectedItem;
                 sala nowaSala = ((RoomRecord)dodajDataGrid.SelectedItem).sala;
 
+                // utworzenie wpisu
                 sprzet nowy = new sprzet
                 {
                     id = noweId,
@@ -194,6 +201,7 @@ namespace Stocktaking.View
             }
         }
 
+        // usunięcie sprzętu z bazy
         private void DeviceDelete_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -214,6 +222,7 @@ namespace Stocktaking.View
             }
         }
 
+        //odświeżenie danych w kontrolkach (CollectionViewSource)
         private void OdswiezSprzety()
         {
             System.Windows.Data.CollectionViewSource deviceRecordViewSource =
