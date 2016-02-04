@@ -17,24 +17,23 @@ using System.Security.Cryptography;
 
 namespace Stocktaking.ViewModel
 {
+    //Klasa zaimplementowana jako Singleton, przechowuje baze danych,
+    //posiada kilka metod pomocniczych, ktore przydaja sie przy implemetacji GUI
     static class ViewLogic
     {
         static private StocktakingDatabaseEntities db = null;
 
-        static public StocktakingDatabaseEntities dbContext
-        {
-            get
-            {
-                return db;
-            }
-        }
+        //kontekst bazy danych
+        static public StocktakingDatabaseEntities dbContext { get { return db; } }
 
+        //inicjalizaca bazy
         static public void InitDataBase()
         {
             if(db == null)
                 db = new StocktakingDatabaseEntities();
         }
 
+        //usuniecie kontekstu bazy
         static public void DisposeDatabase()
         {
             if (db != null)
@@ -44,6 +43,7 @@ namespace Stocktaking.ViewModel
             }
         }
 
+        //obliczanie SHA512
         static public byte[] ObliczSHA(string haslo)
         {
             SHA512 shaM = new SHA512Managed();
@@ -51,6 +51,7 @@ namespace Stocktaking.ViewModel
             return sha;
         }
 
+        //MessageBox  proszacy o potwierdzenie
         static public bool Potwierdz(string pytanie)
         {
             MessageBoxResult result = MessageBox.Show
@@ -65,6 +66,7 @@ namespace Stocktaking.ViewModel
                 return false;
         }
 
+        //MessaheBox infomujacy o bledzie
         static public void Blad(string wiadomosc)
         {
             MessageBox.Show(

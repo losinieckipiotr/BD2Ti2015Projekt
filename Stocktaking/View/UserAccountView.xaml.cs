@@ -17,11 +17,9 @@ using Stocktaking.ViewModel;
 
 namespace Stocktaking.View
 {
-    /// <summary>
-    /// Interaction logic for UserAccountView.xaml
-    /// </summary>
-    /// 
-
+    //klasa pomocniczna, zluzy do wyswietlania danych o
+    //uzytkownikach
+    //poslugiwanie sie klasa pomocnicza ulatwia implementacje GUI
     class UserRecord
 	{
         public int id { get; set; }
@@ -38,6 +36,7 @@ namespace Stocktaking.View
         }
 	}
 
+    //kontrolka znajdujaca sie w zakladce do zarzadzania uzytkownikami
     public partial class UserAccountView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
@@ -45,11 +44,15 @@ namespace Stocktaking.View
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
+        //konstruktor
         public UserAccountView()
         {
             InitializeComponent();
         }  
 
+        //metoda uruchamiajaca sie wtedy gdy zostanie zmieniona widocznosc zakladki oraz gdy
+        //uzytkownik przejdzie na ta zakladke
+        //ladowane tutaj sa rekordy do gridow oraz inne typy do comboboxa
         private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -57,6 +60,7 @@ namespace Stocktaking.View
                 if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                     return;
                 db = ViewLogic.dbContext;
+                StocktakingViewModel.Stocktaking.SelectedTab = Tab.UsrAcc; 
                 if (db == null || loadUI == false)
                     return;
 
@@ -86,11 +90,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
 
+        //metoda przycisku zmiany loginu
         private async void loginButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -108,10 +112,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w loginButton_Click!");
             }
         }
 
+        //metoda przycisku usuwania uzytkwonika
         private async void usunButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -146,11 +151,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w usunButton_Click!");
             }
         }
 
+        //metoda zmiany typu uztkownika
         private async void typButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -169,10 +174,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w typButton_Click!");
             }
         }
 
+        //metoda zmiany hasla uzytkownika
         private async void hasloButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -184,11 +190,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w hasloButton_Click!");
             }
         }
 
+        //metoda dodawania nowego uzytkownika
         private async void dodajButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -273,10 +279,12 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                throw;
+                ViewLogic.Blad("Wystapił bład w dodajButton_Click!");
             }
         }
 
+        //metoda wywoluje sie przy zmianie zaznaczenia w siatce z uzytkownikami
+        //w comboBoxie wybierany jest nady typ uzytkownika
         private void userRecordDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -287,11 +295,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w userRecordDataGrid_SelectionChanged!");
             }
         }
 
+        //metoda pomocnicza odswiezajaca konta
         private async void OdswiezKonta()
         {
             System.Windows.Data.CollectionViewSource userRecordViewSource =
@@ -306,6 +314,7 @@ namespace Stocktaking.View
             userRecordViewSource.Source = rekordy.OrderBy(r => r.id);
         }
 
+        //metoda pomocniczna odswiezajaca pracownikow
         private async void OdswiezPracownikow()
         {
             System.Windows.Data.CollectionViewSource pracownikViewSource =

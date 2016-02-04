@@ -43,6 +43,7 @@ namespace Stocktaking.View
                 if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                     return;
                 db = ViewLogic.dbContext;
+                StocktakingViewModel.Stocktaking.SelectedTab = Tab.InstMan;
                 if (db == null || loadUI == false)
                     return;
 
@@ -399,6 +400,7 @@ namespace Stocktaking.View
             if (myAddNewRoom.answer)
             {
                 upData();
+                StocktakingViewModel.Stocktaking.RealoadTabs(instituteDevicesTab: true);
             }
         }
 
@@ -424,6 +426,7 @@ namespace Stocktaking.View
             }
             await db.SaveChangesAsync();
             upData();
+            StocktakingViewModel.Stocktaking.RealoadTabs(instituteDevicesTab: true);
         }
 
         //przenoszenie sprzętu do innej sali

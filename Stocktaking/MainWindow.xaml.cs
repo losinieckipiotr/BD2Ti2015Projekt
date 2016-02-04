@@ -25,6 +25,8 @@ namespace Stocktaking
             InitializeComponent();
         }
 
+        //ustawienie focusa na kontrolke loginu,
+        //stworzenie kontekstu bazy i logiki zakladek aplikacji
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoginControl.focusLogin();
@@ -32,7 +34,8 @@ namespace Stocktaking
             
         }
 
-        // metoda zmienia visibility każdej zakładki
+        // metoda zmienia visibility każdej zakładki,
+        //index decyduje która zakładka ma zostac wybrana jako początkowa
         public void ChangeVisibility(int index=0,
             Visibility Login=Visibility.Collapsed,
             Visibility Tab=Visibility.Collapsed,
@@ -54,15 +57,16 @@ namespace Stocktaking
             InstituteDevicesManagment.Visibility = InstituteDevicesList;
             InstituteWorkersManagment.Visibility = InstituteWorkersList;
             Raports.Visibility = RaportsVis;
-            Logout.Visibility = LogoutVis;
+            MenuControl.Visibility = LogoutVis;
             TabControlMenu.SelectedIndex=index;
-            TabControlMenu.Visibility = Tab;//dalem na koniec poniewaz po wykonaniu tego wywoluje sie event visible changed na moich tabach why??
+            TabControlMenu.Visibility = Tab;
         }
 
-        private void Logout_Click(object sender, RoutedEventArgs e)
+        //otwieranie pomocy na przycisk F1
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            ChangeVisibility(Login: Visibility.Visible, Tab: Visibility.Collapsed, LogoutVis: Visibility.Collapsed);
-            StocktakingViewModel.Stocktaking.Logout();
+            if (e.Key == Key.F1)
+                StocktakingViewModel.Stocktaking.OpenHelp();
         }
     }
 }

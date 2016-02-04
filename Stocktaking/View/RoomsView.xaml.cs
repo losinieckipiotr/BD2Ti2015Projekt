@@ -21,7 +21,9 @@ namespace Stocktaking.View
     /// <summary>
     /// Interaction logic for Rooms.xaml
     /// </summary>
+    
 
+    // klasa reprezentująca wpis w DataGrid
     class RoomRecord
     {
         public int id { get; set; }
@@ -57,6 +59,7 @@ namespace Stocktaking.View
             InitializeComponent();
         }
 
+        // funkcja odpowiedzialna za ładowanie danych do elementów GUI
         private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -64,6 +67,7 @@ namespace Stocktaking.View
                 if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                     return;
                 db = ViewLogic.dbContext;
+                StocktakingViewModel.Stocktaking.SelectedTab = Tab.Rooms;
                 if (db == null || loadUI == false)
                     return;
 
@@ -89,7 +93,6 @@ namespace Stocktaking.View
                     (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
                 await db.zaklad.LoadAsync();
                 zakladViewSource.Source = db.zaklad.Local.ToBindingList();
-
                 loadUI = false;
             }
             catch (Exception)
@@ -99,6 +102,7 @@ namespace Stocktaking.View
             }
         }
 
+        // zapobieganie wpisywania do kontrolki TextBox znaków innych niż cyfry
         private void Number_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (!char.IsDigit(e.Text, e.Text.Length - 1))
@@ -107,6 +111,7 @@ namespace Stocktaking.View
             }
         }
 
+        // aktualizowanie elementów GUI wraz ze zmianą zaznaczonego elementu w DataGrid
         private void salaDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -122,6 +127,7 @@ namespace Stocktaking.View
             }
         }
 
+        // funkcja aktualizowania danych sali, która już istnieje w bazie
         private async void RoomUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -155,6 +161,7 @@ namespace Stocktaking.View
             }
         }
 
+        //funkcja dodawania nowej sali do bazy
         private async void RoomAdd_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -218,6 +225,7 @@ namespace Stocktaking.View
             }
         }
 
+        // fnkcja usuwania sali z bazy
         private async void RoomDelete_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -239,6 +247,7 @@ namespace Stocktaking.View
             }
         }
 
+        // odświeżenie CollectionViewSource
         private async void OdswiezSale()
         {
             System.Windows.Data.CollectionViewSource roomRecordViewSource =

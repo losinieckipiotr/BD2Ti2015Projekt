@@ -12,37 +12,37 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Stocktaking.ViewModel;
 
 namespace Stocktaking.View
 {
-    /// <summary>
-    /// Interaction logic for LoginView.xaml
-    /// </summary>
-    using ViewModel;
-
     public partial class LoginView : UserControl
     {
+        //kontrolka logowania
         public LoginView()
         {
             InitializeComponent();
         }
-
+        //publiczna metoda do ustawiania focusu na polu login
         public void focusLogin()
         {
             this.login.Focus();
         }
 
+        //logowanie przy nacisnieciu enter
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
                 Login();
         }
 
+        //lub nacisnieciu na przycisk
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Login();
         }
 
+        //metoda logowania
         private void Login()
         {
             string log = login.Text;

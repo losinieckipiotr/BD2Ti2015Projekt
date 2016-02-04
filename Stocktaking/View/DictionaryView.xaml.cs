@@ -13,15 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.Entity;
+using Stocktaking.ViewModel;
 
 namespace Stocktaking.View
 {
-    /// <summary>
-    /// Interaction logic for DictionaryView.xaml
-    /// </summary>
-    /// 
-    using ViewModel;
-
+    //kontrolka znajdujaca sie w zakladce do zarzadzania typami sprzetu i sal
     public partial class DictionaryView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
@@ -29,11 +25,15 @@ namespace Stocktaking.View
 
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
+        //konstruktor
         public DictionaryView()
         {
             InitializeComponent();
         }
 
+        //metoda uruchamiajaca sie wtedy gdy zostanie zmieniona widocznosc zakladki oraz gdy
+        //uzytkownik przejdzie na ta zakladke
+        //ladowane sa tutaj dane do gridow
         private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -41,6 +41,7 @@ namespace Stocktaking.View
                 if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                     return;
                 db = ViewLogic.dbContext;
+                StocktakingViewModel.Stocktaking.SelectedTab = Tab.Dict;
                 if (db == null || loadUI == false)
                     return;
                 
@@ -58,11 +59,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-                
-                throw;
+                ViewLogic.Blad("Wystapił bład w UserControl_IsVisibleChanged!");
             }
         }
 
+        //metoda przycisku do zmiany nazwy typu sprzetu
         private async void typButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -79,11 +80,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w typButton_Click!");
             }
         }
 
+        //metoda przycisku dodajacego nowy typ sprzetu
         private async void nowyTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -127,11 +128,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w nowyTypButton_Click!");
             }
         }
 
+        //metoda przycisku sluzacego do usuwania typu sprzetu
         private async void usunTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -154,11 +155,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w usunTypButton_Click!");
             }
         }
 
+        //metoda przycisku zmiany nazwy typu sali
         private async void salaTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -175,11 +176,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w salaTypButton_Click!");
             }
         }
 
+        //metoda przycisku sluzacego do dodawania nowegu typu sali
         private async void salaNowyTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -223,11 +224,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w salaNowyTypButton_Click!");
             }
         }
 
+        //metoda przycisku do usuwania typu sali
         private async void salaUsunTypButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -250,11 +251,11 @@ namespace Stocktaking.View
             }
             catch (Exception)
             {
-
-                throw;
+                ViewLogic.Blad("Wystapił bład w salaNowyTypButton_Click!");
             }
         }
 
+        //metoda pomocniczna odswiezajaca typy sprzetu
         private async void OdswiezSprzet()
         {
             System.Windows.Data.CollectionViewSource sprzet_typViewSource =
@@ -263,6 +264,7 @@ namespace Stocktaking.View
             sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList().OrderBy(t => t.id);
         }
 
+        //metoda pomocnicza odswiezajaca typy sal
         private async void OdswiezSale()
         {
             System.Windows.Data.CollectionViewSource sala_typViewSource =

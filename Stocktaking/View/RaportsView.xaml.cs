@@ -15,16 +15,13 @@ using System.Windows.Shapes;
 using System.IO;
 using System.ComponentModel;
 using Microsoft.Win32;
+using Stocktaking.ViewModel;
+using Stocktaking.Data;
+using Stocktaking.View.RaportsViewSubWindows;
 
 
 namespace Stocktaking.View
 {
-    /// <summary>
-    /// Interaction logic for RaportsView.xaml
-    /// </summary>
-    using RaportsViewSubWindows;
-    using ViewModel;
-    using Data;
     public partial class RaportsView : UserControl
     {
         private StocktakingDatabaseEntities db = null;
@@ -38,11 +35,6 @@ namespace Stocktaking.View
             InitializeComponent();
         }
 
-        //Uwaga: Ta zakladka laduje sie podejzanie dlugo
-        //Nie wiem co to za funckje operujace na typach dynamicznych, ale z tego co slyszalem
-        //to typy dynamiczne zabijaja wydajnosc :/
-
-
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -50,12 +42,13 @@ namespace Stocktaking.View
                 if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                     return;
                 db = ViewLogic.dbContext;
+                StocktakingViewModel.Stocktaking.SelectedTab = Tab.Raports;
                 if (db == null || loadUI == false)
                     return;
 
                 userAcc = StocktakingViewModel.Stocktaking.User;
 
-                if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))//kiedy program tutaj wchodzi? Gdy wyloguje się np z dyrektora instytutu i zaloguje na dyrektora zakładu
+                if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))
                 {
                     if (Room.IsChecked == true)
                     {

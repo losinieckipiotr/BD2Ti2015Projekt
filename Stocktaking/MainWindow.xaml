@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Inwentaryzacja" Height="600" Width="800"
         xmlns:view="clr-namespace:Stocktaking.View"
-        xmlns:viewModel="clr-namespace:Stocktaking.ViewModel" Loaded="Window_Loaded" Icon="icon.ico">
+        xmlns:viewModel="clr-namespace:Stocktaking.ViewModel" Loaded="Window_Loaded" Icon="icon.ico" KeyDown="Window_KeyDown">
 
     <Window.Resources>
 
@@ -11,7 +11,7 @@
     
     <DockPanel>
 
-        <view:MenuView x:Name="Logout" DockPanel.Dock="Top" Visibility="Collapsed"/>
+        <view:MenuView x:Name="MenuControl" DockPanel.Dock="Top" Visibility="Collapsed"/>
         
         <Grid>
             
