@@ -41,6 +41,8 @@ namespace Stocktaking.View
         //Uwaga: Ta zakladka laduje sie podejzanie dlugo
         //Nie wiem co to za funckje operujace na typach dynamicznych, ale z tego co slyszalem
         //to typy dynamiczne zabijaja wydajnosc :/
+
+
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -53,7 +55,7 @@ namespace Stocktaking.View
 
                 userAcc = StocktakingViewModel.Stocktaking.User;
 
-                if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))//kiedy program tutaj wchodzi?
+                if (!String.IsNullOrWhiteSpace(TypeTextBlock.Text))//kiedy program tutaj wchodzi? Gdy wyloguje się np z dyrektora instytutu i zaloguje na dyrektora zakładu
                 {
                     if (Room.IsChecked == true)
                     {
@@ -98,6 +100,7 @@ namespace Stocktaking.View
                 throw;
             }
         }
+       
         // zmienia ui pod dyrektora zakładu
         private void managerUI()
         {
@@ -117,15 +120,10 @@ namespace Stocktaking.View
             InstituteDatagrid.Visibility = Visibility.Collapsed;
         }
 
+        // przeładowanie danych
         private void upData()
-        {
-            //TypeTextBlock.Text = db.konto_typ.SingleOrDefault(t => t.id == StocktakingViewModel.Stocktaking.GetUserType).nazwa;
-
-            TypeTextBlock.Text = userAcc.konto_typ.nazwa;// o to chodzilo ?
-
-            //pracownik temp = db.pracownik.SingleOrDefault(prac => prac.id == StocktakingViewModel.Stocktaking.GetWorkerId);
-
-            //NameTextBlock.Text = temp.imie + " " + temp.nazwisko;
+        {          
+            TypeTextBlock.Text = userAcc.konto_typ.nazwa;// o to chodzilo ?       
             NameTextBlock.Text = userAcc.pracownik.imie + " " + userAcc.pracownik.nazwisko;
             GenerateRaportButton.IsEnabled = false;
             PathTextBox.Text = "";
@@ -172,8 +170,9 @@ namespace Stocktaking.View
             MessageBox.Show("Raport wygenerowano i zapisano.");
         }
 
-        // delegat potrzebny do przesyłania funkcji które zwracają dane do tworzenia raposrtów
+        // delegat potrzebny do przesyłania funkcji które zwracają dane do tworzenia raportów
         private delegate dynamic getData();
+
         // tworzenie raportu dla dyrektora instytutu
         private void chiefRaport()
         {
@@ -191,6 +190,7 @@ namespace Stocktaking.View
                 saveRaport(myRaport);
             }
         }
+
         // tworzenie raportu dla kierownika zakładu
         private void managerRaport()
         {
@@ -269,6 +269,7 @@ namespace Stocktaking.View
             }
             return myRap;
         }
+
         // zapis myRaport do bazy
         private void saveRaport(string myRaport)
         {
@@ -438,7 +439,8 @@ namespace Stocktaking.View
             });
             return Devices;
         }
-
+        
+        // otwarcie nowego okna w celu wczytaniu do pliki starego raportu
         private void GenerateOldRaportButton_Click(object sender, RoutedEventArgs e)
         {
             var mySelectOldRaport = new SelectOldRaport(db);

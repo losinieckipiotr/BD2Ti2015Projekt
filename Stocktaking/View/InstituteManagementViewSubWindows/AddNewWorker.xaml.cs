@@ -29,6 +29,7 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             myZaklad = zak;
         }
 
+        //załadowanie danych do dataGrid
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var workers = myDb.pracownik.Where(o => o.sala_id == null).ToList();
@@ -39,22 +40,26 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             InstituteTextBlock.Text = myZaklad.nazwa;
         }
 
+        // sprawdzanie zaznaczenia
         private void WorkerDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             upDataUi();
         }
 
+        // sprawdzanie zaznaczenia
         private void RoomDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             upDataUi();
         }
 
+        // gdy wybrano elementy z obu dataGrid to przycisk jest aktywny
         private void upDataUi()
         {
             if (RoomDataGrid.SelectedItem != null && WorkerDataGrid.SelectedItem != null)
                 SelectButton.IsEnabled = true;
         }
 
+        //wprowadzenie zmian, przypisanie pracownika do zakładu i jednocześnie do sali, zamknięcie okna
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
             pracownik worker = (pracownik)WorkerDataGrid.SelectedItem;
@@ -66,6 +71,7 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             this.Close();
         }
 
+        //zamknięcie okna beż wprowadzenia zmian
         private void CanselButton_Click(object sender, RoutedEventArgs e)
         {
             answer = false;

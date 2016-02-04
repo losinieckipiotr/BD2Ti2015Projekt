@@ -29,16 +29,19 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             myZaklad = zaklad;
         }
 
+        //wczytanie danych
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             RoomDataGrid.ItemsSource = myDb.sala.Where(s => s.zaklad_id == null).ToList();
         }
 
+        // gdy wybrano elemnet przycisk jest aktywny
         private void ChoicPersonDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectButton.IsEnabled = true;
         }
 
+        //wprowadzenie zmian, czyli dodanie sali do zakładu i zamknięcie okna
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
             sala myRoom = (sala)RoomDataGrid.SelectedItem;
@@ -49,6 +52,7 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             this.Close();
         }
 
+        // zamknięcie okna bez zmian
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             answer = false;

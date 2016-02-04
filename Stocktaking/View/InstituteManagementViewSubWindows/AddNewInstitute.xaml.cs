@@ -27,10 +27,9 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             myDb = db;
         }
 
+        //załądowanie danych, czyli pracowników i sal
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //var temp = myDb.pracownik.Where(a => a.sala_id == null).ToList();
-
             var temp = from o in myDb.pracownik
                        where o.sala_id == null || o.zaklad.Count == 0
                        select o;
@@ -40,10 +39,7 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             NewIdTextBox.Text = (1 + myDb.zaklad.Max(o => o.id)).ToString();
         }
 
-
-
-
-
+        //stworzenie nowego zakładu z nazwą pobraną z textBoxa oraz wybranym pracownikiem w wybranej sali
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
             pracownik temp = (pracownik)WorkersDataGrid.SelectedItem;
@@ -57,28 +53,32 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             this.Close();
         }
 
+        // zamknięcie okna beż wporwadzenia zmian
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Answer = false;
             this.Close();
         }
 
+
+        // aktywowanie przycisku gdy wybrano elementy
         private void upData()
         {
             if (RoomsDataGrid.SelectedItem != null && WorkersDataGrid.SelectedItem != null && !String.IsNullOrWhiteSpace(NewNameTextBox.Text))
                 SelectButton.IsEnabled = true;
         }
 
+        //sprawdzenie czy wybrano element
         private void WorkersDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             upData();
         }
-
+        //sprawdzenie czy wybrano element
         private void RoomsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             upData();
         }
-
+        //sprawdzenie czy wpisano tekst
         private void NewNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             upData();

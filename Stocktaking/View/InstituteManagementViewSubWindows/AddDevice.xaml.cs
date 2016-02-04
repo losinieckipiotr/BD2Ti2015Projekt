@@ -29,17 +29,20 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             myZaklad = zak;
         }
 
+        //wczytanie danych
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             roomsDataGrid.ItemsSource = myDb.sala.Where(s => s.zaklad_id == myZaklad.id).ToList();
             DeviceDataGrid.ItemsSource = myDb.sprzet.ToList();
         }
 
+        //sprawdzanie czy przycisk moze być aktywny
         private void DeviceDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             upDataUi();
         }
 
+        // powybraniu elementów w datagrid, wprowadzenie zmian czyli przypisanie sprzętu do sali z zakładu
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
             sprzet device = (sprzet)DeviceDataGrid.SelectedItem;
@@ -51,17 +54,20 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             this.Close();
         }
 
+        //zamknięcie okna bez zmian
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             answer = false;
             this.Close();
         }
 
+        //sprawdzenie czy przycisk może być aktywny
         private void roomsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             upDataUi();
         }
 
+        //sprawdzenie czy przycisk może być aktywny
         private void upDataUi()
         {
             if (roomsDataGrid.SelectedItem != null && DeviceDataGrid.SelectedItem != null)

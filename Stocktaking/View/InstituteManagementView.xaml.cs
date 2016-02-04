@@ -35,6 +35,7 @@ namespace Stocktaking.View
             InitializeComponent();
         }
 
+        // w zależności kto się zalogował tak interfejs zostanie zmodyfikowany
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
@@ -75,6 +76,7 @@ namespace Stocktaking.View
             }
         }
 
+        // zwraca zakład który jest zaznaczony lub ten do którego należy zalogowany użytkownik
         private zaklad getSelectionZaklad()
         {
             if (userAcc.konto_typ_id == 3)//kierownik instytutu
@@ -87,6 +89,7 @@ namespace Stocktaking.View
             }
         }
 
+        // przeładowanie danych dla dyrektora instytutu
         private void upDataChief()
         {
             ChiefNameTextBlock.Text = null;
@@ -102,6 +105,7 @@ namespace Stocktaking.View
                 roomsTab: true);
         }
 
+        // przeładowanie danych dla dyrektora zakładu
         private async void upDataManager()
         {
             zaklad selectedZaklad = getSelectionZaklad();
@@ -128,6 +132,7 @@ namespace Stocktaking.View
             }
         }
 
+        // przeładowanie danych dla pracownika technicznego
         private async void upDataTechnician()
         {
             zaklad selectedZaklad = getSelectionZaklad();
@@ -148,6 +153,7 @@ namespace Stocktaking.View
             }
         }
 
+        //w zależności kto jest zalogoany takie przeładowanie zostanie wykonane
         private void upData()
         {
             int Type = userAcc.konto_typ_id;
@@ -167,6 +173,7 @@ namespace Stocktaking.View
             }
         }
 
+        //interfejs dyrektora zakładu
         private void managerUI()
         {
             InstituteName.Visibility = Visibility.Visible;
@@ -185,6 +192,7 @@ namespace Stocktaking.View
 
         }
 
+        // interfejs dyrektora instytutu
         private void chiefUI()
         {
             ChangeChiefRoom.Visibility = Visibility.Visible;
@@ -202,6 +210,7 @@ namespace Stocktaking.View
             MyGrid.ColumnDefinitions[3].Width = new GridLength(170, GridUnitType.Star);
         }
 
+        // interfejs pracownika technicznego
         private void technicalWorkerUI()
         {
             ChangeChiefName.Visibility = Visibility.Collapsed;
@@ -259,6 +268,8 @@ namespace Stocktaking.View
             AddRoomButton.IsEnabled = Enable;
             AddDeviceButton.IsEnabled = Enable;
         }
+
+        //przycisk aktywny po zmianie nazwy zakładu
         private void TextBlockInstituteName_TextChanged(object sender, TextChangedEventArgs e)
         {
             ChangeInstituteName.IsEnabled = true;         
@@ -317,6 +328,7 @@ namespace Stocktaking.View
             }
         }
 
+        //jeśli pracownik zaznaczony to przyciski aktywne
         private void workersDatagrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (workersDatagrid.SelectedItem != null)
@@ -331,6 +343,7 @@ namespace Stocktaking.View
             }
         }
 
+        //jeśli sala zaznaczona to przyciski aktywne
         private void RoomsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (RoomsDataGrid.SelectedItem != null)
@@ -345,6 +358,7 @@ namespace Stocktaking.View
             }
         }
 
+        // jeśli sprzęt zaznaczony to przycisk aktywny
         private void DevicesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DevicesDataGrid.SelectedItem != null)
@@ -412,6 +426,7 @@ namespace Stocktaking.View
             upData();
         }
 
+        //przenoszenie sprzętu do innej sali
         private void MoveDeviceButton_Click(object sender, RoutedEventArgs e)
         {
             var myMoveDevice = new MoveDevice(db, (sprzet)DevicesDataGrid.SelectedItem);
@@ -422,6 +437,7 @@ namespace Stocktaking.View
             }
         }
 
+        // dodawanie sprzętu
         private void AddDeviceButton_Click(object sender, RoutedEventArgs e)
         {
             var myAddDevice = new AddDevice(db, getSelectionZaklad());

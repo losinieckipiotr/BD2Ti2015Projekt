@@ -29,6 +29,7 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             myDevice = device;
         }
 
+        // przyciski aktywne w zależności czy wybrano element
         private void RoomsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (RoomsDataGrid.SelectedItem != null)
@@ -41,6 +42,7 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             }
         }
 
+        // przeładowanie danych w zależności co jest zaznaczone
         private void DataGridInstitute_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DataGridInstitute.SelectedItem != null)
@@ -54,12 +56,14 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             }
         }
 
+        // załądowanie danych
         private void DataGridInstitute_Loaded(object sender, RoutedEventArgs e)
         {
             DataGridInstitute.ItemsSource = myDb.zaklad.ToList();
             RoomsDataGrid.ItemsSource = myDb.sala.ToList();
         }
 
+        //zapisanie zmian i wyjście z okna
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
             sala myRoom = (sala)RoomsDataGrid.SelectedItem;
@@ -69,6 +73,7 @@ namespace Stocktaking.View.InstituteManagementViewSubWindows
             this.Close();
         }
 
+        // wyjście z okna bez zmian
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             answer = false;

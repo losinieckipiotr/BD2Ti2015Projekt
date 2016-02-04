@@ -36,6 +36,7 @@ namespace Stocktaking.View.RaportsViewSubWindows
             buttonUpdata();
         }
 
+        //w zależności kto się zalogował generuje inną listę dostępnych raportów
         private void RaportDatagrid_Loaded(object sender, RoutedEventArgs e)
         {
             int Type = StocktakingViewModel.Stocktaking.User.konto_typ_id;
@@ -51,13 +52,15 @@ namespace Stocktaking.View.RaportsViewSubWindows
                     break;
             }
         }
-
+    
+        //wczytanie danych dla dyrektora instytutu
         private void upDataChief()
         {
             var raports = myDb.raport;
             RaportDatagrid.ItemsSource = raports.ToList();
         }
 
+        //wczytanie danych dla dyrektora zakładu
         private void upDataMan()
         {
             zaklad zak = DataFunctions.GetZaklad(StocktakingViewModel.Stocktaking.User.pracownik);
@@ -66,6 +69,7 @@ namespace Stocktaking.View.RaportsViewSubWindows
         }
 
         private string fileName = "";
+        //pobranie ścieżki zapisu do pliku
         private void GetPathButton_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog mySaveFileDialog = new SaveFileDialog();
@@ -80,17 +84,20 @@ namespace Stocktaking.View.RaportsViewSubWindows
             }
         }
 
+        // zmiana aktywności przycisków
         private void buttonUpdata()
         {
             if (RaportDatagrid.SelectedItem != null && !String.IsNullOrWhiteSpace(PathTextBox.Text))
                 SaveButton.IsEnabled = true;
         }
 
+        //wyjście z okienka
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        //zapisywanie raportu do pliku i zamknięcie okna
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             using (StreamWriter sw = new StreamWriter(fileName))
