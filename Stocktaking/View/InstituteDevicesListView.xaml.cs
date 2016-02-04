@@ -58,7 +58,7 @@ namespace Stocktaking.View
         public bool LoadUI { get { return loadUI; } set { loadUI = value; } }
 
         // funkcja odpowiedzialna za ładowanie danych do elementów GUI
-        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource deviceRecordViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["deviceRecordViewSource"];
-                db.sprzet.Load();
+                await db.sprzet.LoadAsync();
                 List<sprzet> sprzety = db.sprzet.Local.ToList();
                 List<DeviceRecord> rekordy = new List<DeviceRecord>();
                 foreach (sprzet s in sprzety)
@@ -82,17 +82,12 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource sprzet_typViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["sprzet_typViewSource"];
-                db.sprzet_typ.Load();
+                await db.sprzet_typ.LoadAsync();
                 sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList();
-
-                //System.Windows.Data.CollectionViewSource salaViewSource =
-                //    (System.Windows.Data.CollectionViewSource)this.Resources["salaViewSource"];
-                //db.sala.Load();
-                //salaViewSource.Source = db.sala.Local.ToBindingList();
 
                 System.Windows.Data.CollectionViewSource roomRecordViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
-                db.sala.Load();
+                await db.sala.LoadAsync();
                 List<sala> sale = db.sala.Local.ToList();
                 List<RoomRecord> rekordyS = new List<RoomRecord>();
                 foreach (sala s in sale)
@@ -103,8 +98,8 @@ namespace Stocktaking.View
 
                 System.Windows.Data.CollectionViewSource zakladViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
-                db.zaklad.Load();
-                zakladViewSource.Source = db.zaklad.Local.ToBindingList();
+                await db.zaklad.LoadAsync();
+                zakladViewSource.Source = db.zaklad.Local.ToList();
 
                 loadUI = false;
             }
@@ -116,7 +111,7 @@ namespace Stocktaking.View
         }
 
         // funkcja aktualizowania danych sprzętu istniejącego już w bazie 
-        private void DeviceUpdate_Click(object sender, RoutedEventArgs e)
+        private async void DeviceUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -128,7 +123,7 @@ namespace Stocktaking.View
                 string nowyOpis = DeviceDescription.Text;
                 if (r.opis != nowyOpis)
                 {
-                    bool opisIstnieje = db.sprzet.Any(s => s.opis == nowyOpis);
+                    bool opisIstnieje = await db.sprzet.AnyAsync(s => s.opis == nowyOpis);
                     if (opisIstnieje)
                     {
                         ViewLogic.Blad("Isnieje już sprzęt o podanym opisie!");
@@ -137,7 +132,7 @@ namespace Stocktaking.View
                     r.s.opis = nowyOpis;
                 }
                 r.s.sprzet_typ = st;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 OdswiezSprzety();
             }
             catch (Exception)
@@ -147,7 +142,7 @@ namespace Stocktaking.View
         }
 
         // funkcja dodawania nowego sprzętu do bazy
-        private void DeviceAdd_Click(object sender, RoutedEventArgs e)
+        private async void DeviceAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -170,6 +165,7 @@ namespace Stocktaking.View
                 }
 
                 int noweId = 1;
+                await db.sprzet.LoadAsync();
                 foreach (sprzet s in db.sprzet.Local.OrderBy(s => s.id))
                 {
                     if (noweId != s.id)
@@ -193,7 +189,7 @@ namespace Stocktaking.View
                     //sala_id = null;
                 };
                 db.sprzet.Add(nowy);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 OdswiezSprzety();
             }
             catch (Exception)
@@ -203,7 +199,7 @@ namespace Stocktaking.View
         }
 
         // usunięcie sprzętu z bazy
-        private void DeviceDelete_Click(object sender, RoutedEventArgs e)
+        private async void DeviceDelete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -213,7 +209,7 @@ namespace Stocktaking.View
                 DeviceRecord r = (DeviceRecord)sprzetDataGrid.SelectedItem;
 
                 db.sprzet.Remove(r.s);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 OdswiezSprzety();
             }
             catch (Exception)
@@ -224,11 +220,11 @@ namespace Stocktaking.View
         }
 
         //odświeżenie danych w kontrolkach (CollectionViewSource)
-        private void OdswiezSprzety()
+        private async void OdswiezSprzety()
         {
             System.Windows.Data.CollectionViewSource deviceRecordViewSource =
                 (System.Windows.Data.CollectionViewSource)this.Resources["deviceRecordViewSource"];
-            db.sprzet.Load();
+            await db.sprzet.LoadAsync();
             List<sprzet> sprzety = db.sprzet.Local.ToList();
             List<DeviceRecord> rekordy = new List<DeviceRecord>();
             foreach (sprzet s in sprzety)
