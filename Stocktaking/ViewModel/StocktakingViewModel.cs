@@ -90,11 +90,12 @@ namespace Stocktaking.ViewModel
 
         public void OpenHelp()
         {
-            if(selectedTab != Tab.None)
+            if (selectedTab != Tab.None)
             {
                 string myPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Help\", "StocktakingHelp.chm");
                 System.Diagnostics.Process.Start(myPath);
             }
+            
         }
 
         //inicjalizacja bazy danych w innym watku
