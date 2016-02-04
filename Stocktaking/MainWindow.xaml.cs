@@ -31,6 +31,7 @@ namespace Stocktaking
         {
             LoginControl.focusLogin();
             StocktakingViewModel.CreateStocktaking(this);
+            
         }
 
         // metoda zmienia visibility każdej zakładki,
