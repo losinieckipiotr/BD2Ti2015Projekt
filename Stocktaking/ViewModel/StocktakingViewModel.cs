@@ -108,7 +108,7 @@ namespace Stocktaking.ViewModel
                     System.Diagnostics.Process.Start(myPath);
                     break;
                 case Tab.InstMan:
-                    myPath += "Zarzadzaniezakladami.htm";
+                    myPath += "Zaklad.htm";
                     System.Diagnostics.Process.Start(myPath);
                     break;
                 case Tab.Raports:
