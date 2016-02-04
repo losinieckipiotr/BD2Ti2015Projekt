@@ -14,6 +14,7 @@ namespace Stocktaking.ViewModel
     //Przechowuje konto zalogowanego uzytkownika oraz glowne okno aplikacji.
     class StocktakingViewModel
     {
+        private Tab selectedTab = Tab.None;
         private StocktakingDatabaseEntities db = null;
         private MainWindow win = null;
         private konto userAcc = null;
@@ -23,6 +24,8 @@ namespace Stocktaking.ViewModel
         public static StocktakingViewModel Stocktaking { get { return stocktaking; } }//instancja
         public MainWindow Window { get { return win; } }//okno glowne
         public konto User { get { return userAcc; } }//zalogowany uzytkownik
+
+        public Tab SelectedTab { get { return selectedTab; } set { selectedTab = value; } }
 
         //metoda tworzaca instancje klasy
         public static void CreateStocktaking(MainWindow win)
@@ -83,6 +86,15 @@ namespace Stocktaking.ViewModel
             db = null;
             ViewLogic.DisposeDatabase();
             InitDbAsync();
+        }
+
+        public void OpenHelp()
+        {
+            if(selectedTab != Tab.None)
+            {
+                string myPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Help\", "StocktakingHelp.chm");
+                System.Diagnostics.Process.Start(myPath);
+            }
         }
 
         //inicjalizacja bazy danych w innym watku
@@ -172,4 +184,6 @@ namespace Stocktaking.ViewModel
             }
         }
     }
+
+    enum Tab { None, UsrAcc, Rooms, InstMan, Dict, Devs, Workers, Raports }
 }

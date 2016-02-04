@@ -65,7 +65,7 @@ namespace Stocktaking
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.F1)
-                MenuControl.Help_Click(this, null);
+                StocktakingViewModel.Stocktaking.OpenHelp();
         }
     }
 }

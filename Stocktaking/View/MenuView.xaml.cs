@@ -32,11 +32,7 @@ namespace Stocktaking.View
         {
             try
             {
-                if (StocktakingViewModel.Stocktaking.User != null)
-                {
-                    string myPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Help\", "StocktakingHelp.chm");
-                    System.Diagnostics.Process.Start(myPath);
-                }
+                StocktakingViewModel.Stocktaking.OpenHelp();
             }
             catch (Exception)
             {
@@ -56,6 +52,7 @@ namespace Stocktaking.View
                                                 Tab: Visibility.Collapsed,
                                                 LogoutVis: Visibility.Collapsed);
                 StocktakingViewModel.Stocktaking.Window.LoginControl.focusLogin();
+                StocktakingViewModel.Stocktaking.SelectedTab = Tab.None;
             }
             catch (Exception)
             {

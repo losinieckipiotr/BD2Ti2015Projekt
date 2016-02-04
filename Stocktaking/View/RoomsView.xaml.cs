@@ -67,6 +67,7 @@ namespace Stocktaking.View
                 if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                     return;
                 db = ViewLogic.dbContext;
+                StocktakingViewModel.Stocktaking.SelectedTab = Tab.Rooms;
                 if (db == null || loadUI == false)
                     return;
 
@@ -92,7 +93,6 @@ namespace Stocktaking.View
                     (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
                 await db.zaklad.LoadAsync();
                 zakladViewSource.Source = db.zaklad.Local.ToBindingList();
-
                 loadUI = false;
             }
             catch (Exception)
