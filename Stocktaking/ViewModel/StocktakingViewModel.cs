@@ -90,11 +90,47 @@ namespace Stocktaking.ViewModel
 
         public void OpenHelp()
         {
-            if(selectedTab != Tab.None)
+            //if(selectedTab != Tab.None)
+            //{
+            //    string myPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Help\", "StocktakingHelp.chm");
+            //    System.Diagnostics.Process.Start(myPath);
+            //}
+            string myPath = "mk:@MSITStore:";
+            myPath += System.IO.Path.Combine(Environment.CurrentDirectory, @"Help\", "StocktakingHelp.chm::/");
+            switch (selectedTab)
             {
-                string myPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Help\", "StocktakingHelp.chm");
-                System.Diagnostics.Process.Start(myPath);
+                case Tab.Devs:
+                    myPath += "Sprzet.htm";
+                    System.Diagnostics.Process.Start(myPath);
+                    break;
+                case Tab.Dict:
+                    myPath += "Slowniki.htm";
+                    System.Diagnostics.Process.Start(myPath);
+                    break;
+                case Tab.InstMan:
+                    myPath += "Zarzadzaniezakladami.htm";
+                    System.Diagnostics.Process.Start(myPath);
+                    break;
+                case Tab.Raports:
+                    myPath += "Raporty.htm";
+                    System.Diagnostics.Process.Start(myPath);
+                    break;
+                case Tab.Rooms:
+                    myPath += "Sale.htm";
+                    System.Diagnostics.Process.Start(myPath);
+                    break;
+                case Tab.UsrAcc:
+                    myPath += "Konta.htm";
+                    System.Diagnostics.Process.Start(myPath);
+                    break;
+                case Tab.Workers:
+                    myPath += "Pracownicy.htm";
+                    System.Diagnostics.Process.Start(myPath);
+                    break;
+
             }
+
+
         }
 
         //inicjalizacja bazy danych w innym watku
