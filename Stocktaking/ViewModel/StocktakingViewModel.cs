@@ -127,10 +127,10 @@ namespace Stocktaking.ViewModel
                     myPath += "Pracownicy.htm";
                     System.Diagnostics.Process.Start(myPath);
                     break;
+                default:
+                    break;
 
             }
-
-
         }
 
         //inicjalizacja bazy danych w innym watku

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Inwentaryzacja" Height="600" Width="800"
         xmlns:view="clr-namespace:Stocktaking.View"
-        xmlns:viewModel="clr-namespace:Stocktaking.ViewModel" Loaded="Window_Loaded" Icon="icon.ico" KeyDown="Window_KeyDown">
+        xmlns:viewModel="clr-namespace:Stocktaking.ViewModel" Loaded="Window_Loaded" Icon="icon.ico" KeyUp="Window_KeyUp">
 
     <Window.Resources>
 

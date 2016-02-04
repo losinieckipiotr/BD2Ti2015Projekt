@@ -62,7 +62,7 @@ namespace Stocktaking
         }
 
         //otwieranie pomocy na przycisk F1
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             try
             {
