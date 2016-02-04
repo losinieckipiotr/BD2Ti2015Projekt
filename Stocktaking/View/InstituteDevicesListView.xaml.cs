@@ -82,10 +82,21 @@ namespace Stocktaking.View
                 db.sprzet_typ.Load();
                 sprzet_typViewSource.Source = db.sprzet_typ.Local.ToBindingList();
 
-                System.Windows.Data.CollectionViewSource salaViewSource =
-                    (System.Windows.Data.CollectionViewSource)this.Resources["salaViewSource"];
+                //System.Windows.Data.CollectionViewSource salaViewSource =
+                //    (System.Windows.Data.CollectionViewSource)this.Resources["salaViewSource"];
+                //db.sala.Load();
+                //salaViewSource.Source = db.sala.Local.ToBindingList();
+
+                System.Windows.Data.CollectionViewSource roomRecordViewSource =
+                    (System.Windows.Data.CollectionViewSource)this.Resources["roomRecordViewSource"];
                 db.sala.Load();
-                salaViewSource.Source = db.sala.Local.ToBindingList();
+                List<sala> sale = db.sala.Local.ToList();
+                List<RoomRecord> rekordyS = new List<RoomRecord>();
+                foreach (sala s in sale)
+                {
+                    rekordyS.Add(new RoomRecord(s));
+                }
+                roomRecordViewSource.Source = rekordyS.OrderBy(r => r.id);
 
                 System.Windows.Data.CollectionViewSource zakladViewSource =
                     (System.Windows.Data.CollectionViewSource)this.Resources["zakladViewSource"];
@@ -138,7 +149,7 @@ namespace Stocktaking.View
                 if (!ViewLogic.Potwierdz("Czy chcesz dodać sprzęt?"))
                     return;
 
-                string nowyOpis = DeviceDescription.Text;
+                string nowyOpis = AddDeviceDescription.Text;
                 if (nowyOpis == "")
                 {
                     ViewLogic.Blad("Nie podano opisu!");
@@ -160,7 +171,8 @@ namespace Stocktaking.View
                         ++noweId;
                 }
 
-                sprzet_typ nowyTyp = (sprzet_typ)DeviceType.SelectedItem;
+                sprzet_typ nowyTyp = (sprzet_typ)AddDeviceType.SelectedItem;
+                sala nowaSala = ((RoomRecord)dodajDataGrid.SelectedItem).sala;
 
                 sprzet nowy = new sprzet
                 {
@@ -168,6 +180,8 @@ namespace Stocktaking.View
                     opis = nowyOpis,
                     sprzet_typ = nowyTyp,
                     sprzet_typ_id = nowyTyp.id,
+                    sala = nowaSala,
+                    sala_id = nowaSala.id
                     //sala_id = null;
                 };
                 db.sprzet.Add(nowy);

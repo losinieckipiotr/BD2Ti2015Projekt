@@ -253,7 +253,7 @@ namespace Stocktaking.View
             roomRecordViewSource.Source = rekordy.OrderBy(r => r.id);
 
             StocktakingViewModel.Stocktaking.RealoadTabs(
-                        raportsTab: true);
+                        raportsTab: true, instituteDevicesTab: true);
         }
     }
 }

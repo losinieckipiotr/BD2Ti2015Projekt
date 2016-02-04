@@ -9,7 +9,7 @@
              IsVisibleChanged="UserControl_IsVisibleChanged">
 
     <UserControl.Resources>
-        <CollectionViewSource x:Key="salaViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:sala}, CreateList=True}"/>
+        <CollectionViewSource x:Key="roomRecordViewSource" d:DesignSource="{d:DesignInstance {x:Type local:RoomRecord}, CreateList=True}"/>
         <CollectionViewSource x:Key="sprzet_typViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:sprzet_typ}, CreateList=True}"/>
         <CollectionViewSource x:Key="zakladViewSource" d:DesignSource="{d:DesignInstance {x:Type Stocktaking:zaklad}, CreateList=True}"/>
         <CollectionViewSource x:Key="deviceRecordViewSource" d:DesignSource="{d:DesignInstance {x:Type local:DeviceRecord}, CreateList=True}"/>
@@ -23,11 +23,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="42"/>
+            <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Label Content="Pełna lista sprzętu:" Margin="0,5,0,0"/>
-        <DataGrid x:Name="sprzetDataGrid" EnableRowVirtualization="True" Margin="5,35,5,5" Grid.ColumnSpan="3" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid x:Name="sprzetDataGrid" EnableRowVirtualization="True" Margin="5,35,5,5" Grid.ColumnSpan="3" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="sprzetIdColumn" Binding="{Binding id}" Header="Id" Width="30" MinWidth="30"/>
                 <DataGridTextColumn x:Name="sprzetTypColumn" Binding="{Binding typ}" Header="Typ" Width="Auto"/>
@@ -55,9 +58,31 @@
 
         <StackPanel Grid.Row="1" Grid.Column="2" >
             <Button x:Name="DeviceUpdate" Content="Aktualizuj" Click="DeviceUpdate_Click" Height="26" Margin="5,5,5,0" Width="170" HorizontalAlignment="Left"/>
-            <Button x:Name="DeviceAdd" Click="DeviceAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26" Width="170" HorizontalAlignment="Left"/>
+            <!--Button x:Name="DeviceAdd" Click="DeviceAdd_Click" Content="Dodaj" Margin="5,5,5,0" Height="26" Width="170" HorizontalAlignment="Left"/-->
             <Button x:Name="DeviceDelete" Click="DeviceDelete_Click" Content="Usuń" Margin="5,5,5,0" Height="26" Width="170" HorizontalAlignment="Left"/>
         </StackPanel>
 
+        <Label Content="Dodaj nowy sprzęt:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2"/>
+
+        <StackPanel Grid.Row="0" Grid.Column="3" Margin="0,35,0,0">
+            <Label Content="Typ:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Opis:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+            <Label Content="Sala:" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Grid.Column="4" Margin="0,35,0,0">
+            <ComboBox Margin="5,5,5,0" x:Name="AddDeviceType"  Height="26" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource sprzet_typViewSource}}" DisplayMemberPath="typ_sprzetu" Width="170" HorizontalAlignment="Left"/>
+            <TextBox Margin="5,5,5,0" x:Name="AddDeviceDescription" VerticalAlignment="Center" Height="26" Width="170" HorizontalAlignment="Left"/>
+        </StackPanel>
+
+        <DataGrid x:Name="dodajDataGrid" Grid.Column="3" Margin="5,130,5,5" EnableRowVirtualization="True" Grid.ColumnSpan="3" ItemsSource="{Binding Source={StaticResource roomRecordViewSource}}" AutoGenerateColumns="False" IsReadOnly="True" Width="Auto" HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="sprzetIdSaliColumn" Binding="{Binding id}" Header="Id" Width="30" MinWidth="30"/>
+                <DataGridTextColumn x:Name="sprzetNrSaliColumn" Binding="{Binding numer}" Header="Numer sali" Width="40" MinWidth="40"/>
+                <DataGridTextColumn x:Name="salaTypColumn" Binding="{Binding typSali}" Header="Typ sali" MinWidth="40" Width="Auto"/>
+                <DataGridTextColumn x:Name="salaZakladColumn" Header="Zakład" MinWidth="90" Binding="{Binding zaklad}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="DeviceAdd" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" VerticalAlignment="Top" Content="Dodaj" Margin="5,5,5,0" Height="26" Width="170" Click="DeviceAdd_Click"/>
     </Grid>
 </UserControl>
