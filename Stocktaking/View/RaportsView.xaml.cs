@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.IO;
 using System.ComponentModel;
 using Microsoft.Win32;
+using System.Data.Entity;
 using Stocktaking.ViewModel;
 using Stocktaking.Data;
 using Stocktaking.View.RaportsViewSubWindows;
@@ -95,13 +96,13 @@ namespace Stocktaking.View
         }
        
         // zmienia ui pod dyrektora zakładu
-        private void managerUI()
+        private async void managerUI()
         {
             RoomMan.IsChecked = true;
             RadioButtonChief.Visibility = Visibility.Collapsed;
             RadioButtonManager.Visibility = Visibility.Visible;
             InstituteDatagrid.Visibility = Visibility.Visible;
-            InstituteDatagrid.ItemsSource = getMyInstituteData();
+            InstituteDatagrid.ItemsSource = await getMyInstituteData();
         }
 
         //zmienia ui pod dyrektora instytutu
@@ -164,49 +165,48 @@ namespace Stocktaking.View
         }
 
         // delegat potrzebny do przesyłania funkcji które zwracają dane do tworzenia raportów
-        private delegate dynamic getData();
+        //private delegate dynamic getData();
 
         // tworzenie raportu dla dyrektora instytutu
-        private void chiefRaport()
+        private async void chiefRaport()
         {
             using (StreamWriter sw = new StreamWriter(fileName))
             {
                 string myRaport = "Raport wygenerował " + TypeTextBlock.Text + ": " + NameTextBlock.Text + "\r\n";
                 myRaport += "dnia: " + DateTime.Now;
-                getData getMyData = new getData(GetInstitue);
-                myRaport += createRaportFromInstitute(getMyData);
-                getMyData = GetRoom;
-                myRaport += createRaportFromRoom(getMyData);
-                getMyData = GetDevice;
-                myRaport += createRaportFromDevice(getMyData);
-                sw.Write(myRaport);
+                //getData getMyData = new getData(GetInstitue);
+                myRaport += createRaportFromInstitute(await GetInstitue());
+                //getMyData = await GetRoom();
+                myRaport += createRaportFromRoom(await GetRoom());
+                //getMyData = await GetDevice();
+                myRaport += createRaportFromDevice(await GetDevice());
+                await sw.WriteAsync(myRaport);
                 saveRaport(myRaport);
             }
         }
 
         // tworzenie raportu dla kierownika zakładu
-        private void managerRaport()
+        private async void managerRaport()
         {
             using (StreamWriter sw = new StreamWriter(fileName))
             {
                 string myRaport = "Raport wygenerował " + TypeTextBlock.Text + ": " + NameTextBlock.Text + "\r\n";
                 myRaport += "dnia: " + DateTime.Now;
-                getData getMyData = new getData(getMyInstituteData);
-                myRaport += createRaportFromInstitute(getMyData);
-                getMyData = GetRoomInstitute;
-                myRaport += createRaportFromRoom(getMyData);
-                getMyData = GetDeviceInstitute;
-                myRaport += createRaportFromDevice(getMyData);
-                sw.Write(myRaport);
+                //dynamic data = await getMyInstituteData();
+                //getData getMyData = new getData(data);
+                myRaport += createRaportFromInstitute(await getMyInstituteData());
+                //getMyData = await GetRoomInstitute();
+                myRaport += createRaportFromRoom(await GetRoomInstitute());
+                //getMyData = await GetDeviceInstitute();
+                myRaport += createRaportFromDevice(await GetDeviceInstitute());
+                await sw.WriteAsync(myRaport);
                 saveRaport(myRaport);
             }
         }
 
         // tworzenie raportu z zakładów
-        private string createRaportFromInstitute(getData tem)
+        private string createRaportFromInstitute(dynamic institute)
         {
-
-            var institute = tem();
             string temp, t1, t2;
             string myRap = "\r\nId".PadRight(7) + "Nazwa".PadRight(50) + "Kierownik".PadRight(30) + "Pracownicy".PadRight(15)
                     + "Sale".PadRight(15);
@@ -222,9 +222,8 @@ namespace Stocktaking.View
             return myRap;
         }
         //tworzenie raportów z sal
-        private string createRaportFromRoom(getData tem)
+        private string createRaportFromRoom(dynamic room)
         {
-            var room = tem();
             string temp, t1, t2, t3, t4, t5;
             string myRap = "\r\nId".PadRight(7) + "Rodzaj".PadRight(40) + "Liczba".PadRight(15) + "Pojemność".PadRight(15)
                             + "Pracownicy".PadRight(15) + "Sprzęt".PadRight(15);
@@ -247,9 +246,8 @@ namespace Stocktaking.View
             return myRap;
         }
         // tworzenie raportu z sprzętu
-        private string createRaportFromDevice(getData tem)
+        private string createRaportFromDevice(dynamic device)
         {
-            var device = tem();
             string temp, t1, t2;
             string myRap = "\r\nId".PadRight(7) + "Typ".PadRight(40) + "Liczba".PadRight(15);
             foreach (var item in device)
@@ -264,11 +262,12 @@ namespace Stocktaking.View
         }
 
         // zapis myRaport do bazy
-        private void saveRaport(string myRaport)
+        private async void saveRaport(string myRaport)
         {
             int newId = 1;
-            if (db.raport.Any())
-                newId = 1 + db.raport.Max(r => r.id);
+            bool result = await db.raport.AnyAsync();
+            if (result)
+                newId = 1 + await db.raport.MaxAsync(r => r.id);
             raport myR = new raport()
             {
                 id = newId,
@@ -278,159 +277,189 @@ namespace Stocktaking.View
                 raport1 = myRaport
             };
             db.raport.Add(myR);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
         // gdy radio button sprzęt to przypisuje dane
-        private void Device_Checked(object sender, RoutedEventArgs e)
+        private async void Device_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = GetDevice();
+            RaportDatagrid.ItemsSource = await GetDevice();
         }
         // gdy radio button sale to przypisuje dane
-        private void Room_Checked(object sender, RoutedEventArgs e)
+        private async void Room_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = GetRoom();
+            RaportDatagrid.ItemsSource = await GetRoom();
         }
         // gdy radio button zakłady to przypisuje dane
-        private void Worker_Checked(object sender, RoutedEventArgs e)
+        private async void Worker_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = GetInstitue();
+            RaportDatagrid.ItemsSource = await GetInstitue();
         }
         //gdy radio button sprzęt to przypisuje dane-dyrektor zakładu
-        private void DeviceMan_Checked(object sender, RoutedEventArgs e)
+        private async void DeviceMan_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = GetDeviceInstitute();
+            RaportDatagrid.ItemsSource = await GetDeviceInstitute();
         }
         //gdy radio button sale to przypisuje dane-dyrektor zakładu
-        private void RoomMan_Checked(object sender, RoutedEventArgs e)
+        private async void RoomMan_Checked(object sender, RoutedEventArgs e)
         {
-            RaportDatagrid.ItemsSource = GetRoomInstitute();
+            RaportDatagrid.ItemsSource = await GetRoomInstitute();
         }
 
         //zwraca dane o zakładzie w którym jest kierownik zakładu
-        private dynamic getMyInstituteData()
+        private Task<dynamic> getMyInstituteData()
         {
-            zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
-            var Institute = (from z in db.zaklad
-                             where z.id == zak.id
-                             select new
-                             {
-                                 Id = z.id,
-                                 Nazwa = z.nazwa,
-                                 Kierownik = z.pracownik.imie + " " + z.pracownik.nazwisko,
-                                 Pracownicy = db.pracownik.Count(p => p.sala.zaklad_id == z.id),
-                                 Sale = db.sala.Count(s => s.zaklad_id == z.id)
-                             }).ToList();
-            return Institute;
+            Task<dynamic> t = new Task<dynamic>(() =>
+            {
+                zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
+                var Institute = (from z in db.zaklad
+                                 where z.id == zak.id
+                                 select new
+                                 {
+                                     Id = z.id,
+                                     Nazwa = z.nazwa,
+                                     Kierownik = z.pracownik.imie + " " + z.pracownik.nazwisko,
+                                     Pracownicy = db.pracownik.Count(p => p.sala.zaklad_id == z.id),
+                                     Sale = db.sala.Count(s => s.zaklad_id == z.id)
+                                 }).ToList();
+                return Institute;
+            });
+            t.Start();
+            return t;
         }
         // zwraca dane o salach w zakładzie
-        private dynamic GetRoomInstitute()
+        private Task<dynamic> GetRoomInstitute()
         {
-            zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
-            var Rooms = (from s in db.sala_typ
-                         select new
-                         {
-                             Id = s.id,
-                             Rodzaj = s.typ_sali,
-                             Liczba = db.sala.Count(sa => sa.sala_typ_id == s.id && sa.zaklad_id == zak.id),
-                             Pojemność = (int?)db.sala.Where(sa => sa.sala_typ_id == s.id && sa.zaklad_id == zak.id).Sum(a => a.pojemnosc),
-                             Pracownicy = db.pracownik.Count(p => p.sala.sala_typ_id == s.id && p.sala.zaklad_id == zak.id),
-                             Sprzęt = db.sprzet.Count(sp => sp.sala.sala_typ_id == s.id && sp.sala.zaklad_id == zak.id)
-                         }).ToList();
-            Rooms.Add(new
+            Task<dynamic> t = new Task<dynamic>(() =>
             {
-                Id = 0,
-                Rodzaj = "Suma",
-                Liczba = Rooms.Sum(a => a.Liczba),
-                Pojemność = Rooms.Sum(s => s.Pojemność),
-                Pracownicy = Rooms.Sum(p => p.Pracownicy),
-                Sprzęt = Rooms.Sum(s => s.Sprzęt)
-            });
-            return Rooms;
-        }
-        // zwraca dane o sprzecie w zakladzie 
-        private dynamic GetDeviceInstitute()
-        {
-            zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
-
-            var Devices = (from d in db.sprzet_typ
-                           select new
-                           {
-                               Id = d.id,
-                               Typ = d.typ_sprzetu,
-                               Liczba = db.sprzet.Count(a => a.sprzet_typ_id == d.id && a.sala.zaklad_id == zak.id),
-                           }).ToList();
-            Devices.Add(new
-            {
-                Id = 0,
-                Typ = "Suma",
-                Liczba = Devices.Sum(a => a.Liczba),
-            });
-            return Devices;
-        }
-        //zwraca dane o zakładach dla instytutu
-        private dynamic GetInstitue()
-        {
-            var Institute = (from z in db.zaklad
+                zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
+                var Rooms = (from s in db.sala_typ
                              select new
                              {
-                                 Id = z.id,
-                                 Nazwa = z.nazwa,
-                                 Kierownik = z.pracownik.imie + " " + z.pracownik.nazwisko,
-                                 Pracownicy = db.pracownik.Count(p => p.sala.zaklad_id == z.id),
-                                 Sale = db.sala.Count(s => s.zaklad_id == z.id)
+                                 Id = s.id,
+                                 Rodzaj = s.typ_sali,
+                                 Liczba = db.sala.Count(sa => sa.sala_typ_id == s.id && sa.zaklad_id == zak.id),
+                                 Pojemność = (int?)db.sala.Where(sa => sa.sala_typ_id == s.id && sa.zaklad_id == zak.id).Sum(a => a.pojemnosc),
+                                 Pracownicy = db.pracownik.Count(p => p.sala.sala_typ_id == s.id && p.sala.zaklad_id == zak.id),
+                                 Sprzęt = db.sprzet.Count(sp => sp.sala.sala_typ_id == s.id && sp.sala.zaklad_id == zak.id)
                              }).ToList();
-            Institute.Add(new
-            {
-                Id = 0,
-                Nazwa = "Suma",
-                Kierownik = " ",
-                Pracownicy = Institute.Sum(a => a.Pracownicy),
-                Sale = Institute.Sum(a => a.Sale)
+                Rooms.Add(new
+                {
+                    Id = 0,
+                    Rodzaj = "Suma",
+                    Liczba = Rooms.Sum(a => a.Liczba),
+                    Pojemność = Rooms.Sum(s => s.Pojemność),
+                    Pracownicy = Rooms.Sum(p => p.Pracownicy),
+                    Sprzęt = Rooms.Sum(s => s.Sprzęt)
+                });
+                return Rooms;
             });
-            return Institute;
+            t.Start();
+            return t;
+        }
+        // zwraca dane o sprzecie w zakladzie 
+        private Task<dynamic> GetDeviceInstitute()
+        {
+            Task<dynamic> t = new Task<dynamic>(() =>
+            {
+                zaklad zak = DataFunctions.GetZaklad(userAcc.pracownik);
+
+                var Devices = (from d in db.sprzet_typ
+                               select new
+                               {
+                                   Id = d.id,
+                                   Typ = d.typ_sprzetu,
+                                   Liczba = db.sprzet.Count(a => a.sprzet_typ_id == d.id && a.sala.zaklad_id == zak.id),
+                               }).ToList();
+                Devices.Add(new
+                {
+                    Id = 0,
+                    Typ = "Suma",
+                    Liczba = Devices.Sum(a => a.Liczba),
+                });
+                return Devices;
+            });
+            t.Start();
+            return t;
+        }
+        //zwraca dane o zakładach dla instytutu
+        private Task<dynamic> GetInstitue()
+        {
+            Task<dynamic> t = new Task<dynamic>(() =>
+            {
+                var Institute = (from z in db.zaklad
+                                 select new
+                                 {
+                                     Id = z.id,
+                                     Nazwa = z.nazwa,
+                                     Kierownik = z.pracownik.imie + " " + z.pracownik.nazwisko,
+                                     Pracownicy = db.pracownik.Count(p => p.sala.zaklad_id == z.id),
+                                     Sale = db.sala.Count(s => s.zaklad_id == z.id)
+                                 }).ToList();
+                Institute.Add(new
+                {
+                    Id = 0,
+                    Nazwa = "Suma",
+                    Kierownik = " ",
+                    Pracownicy = Institute.Sum(a => a.Pracownicy),
+                    Sale = Institute.Sum(a => a.Sale)
+                });
+                return Institute;
+            });
+            t.Start();
+            return t;
         }
         // zwraca dane o salach dla instytutu
-        private dynamic GetRoom()
+        private Task<dynamic> GetRoom()
         {
-            var Rooms = (from s in db.sala_typ
-                         select new
-                         {
-                             Id = s.id,
-                             Rodzaj = s.typ_sali,
-                             Liczba = db.sala.Count(sa => sa.sala_typ_id == s.id),
-                             Pojemność = db.sala.Where(sa => sa.sala_typ_id == s.id).Sum(a => a.pojemnosc),
-                             Pracownicy = db.pracownik.Count(p => p.sala.sala_typ_id == s.id),
-                             Sprzęt = db.sprzet.Count(sp => sp.sala.sala_typ_id == s.id)
-                         }).ToList();
-            Rooms.Add(new
+            Task<dynamic> t = new Task<dynamic>(() =>
             {
-                Id = 0,
-                Rodzaj = "Suma",
-                Liczba = Rooms.Sum(a => a.Liczba),
-                Pojemność = Rooms.Sum(s => s.Pojemność),
-                Pracownicy = Rooms.Sum(p => p.Pracownicy),
-                Sprzęt = Rooms.Sum(s => s.Sprzęt)
+                var Rooms = (from s in db.sala_typ
+                             select new
+                             {
+                                 Id = s.id,
+                                 Rodzaj = s.typ_sali,
+                                 Liczba = db.sala.Count(sa => sa.sala_typ_id == s.id),
+                                 Pojemność = db.sala.Where(sa => sa.sala_typ_id == s.id).Sum(a => a.pojemnosc),
+                                 Pracownicy = db.pracownik.Count(p => p.sala.sala_typ_id == s.id),
+                                 Sprzęt = db.sprzet.Count(sp => sp.sala.sala_typ_id == s.id)
+                             }).ToList();
+                Rooms.Add(new
+                {
+                    Id = 0,
+                    Rodzaj = "Suma",
+                    Liczba = Rooms.Sum(a => a.Liczba),
+                    Pojemność = Rooms.Sum(s => s.Pojemność),
+                    Pracownicy = Rooms.Sum(p => p.Pracownicy),
+                    Sprzęt = Rooms.Sum(s => s.Sprzęt)
+                });
+                return Rooms;
             });
-            return Rooms;
+            t.Start();
+            return t;
         }
         // zwraca dane o sprzecie 
         private dynamic GetDevice()
         {
-            var Devices = (from d in db.sprzet_typ
-                           select new
-                           {
-                               Id = d.id,
-                               Typ = d.typ_sprzetu,
-                               Liczba = db.sprzet.Count(a => a.sprzet_typ_id == d.id),
-                           }).ToList();
-            Devices.Add(new
+            Task<dynamic> t = new Task<dynamic>(() =>
             {
-                Id = 0,
-                Typ = "Suma",
-                Liczba = Devices.Sum(a => a.Liczba),
+                var Devices = (from d in db.sprzet_typ
+                               select new
+                               {
+                                   Id = d.id,
+                                   Typ = d.typ_sprzetu,
+                                   Liczba = db.sprzet.Count(a => a.sprzet_typ_id == d.id),
+                               }).ToList();
+                Devices.Add(new
+                {
+                    Id = 0,
+                    Typ = "Suma",
+                    Liczba = Devices.Sum(a => a.Liczba),
+                });
+                return Devices;
             });
-            return Devices;
+            t.Start();
+            return t;
         }
         
         // otwarcie nowego okna w celu wczytaniu do pliki starego raportu
@@ -439,7 +468,5 @@ namespace Stocktaking.View
             var mySelectOldRaport = new SelectOldRaport(db);
             mySelectOldRaport.ShowDialog();
         }
-
-
     }
 }
